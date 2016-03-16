@@ -12,6 +12,9 @@ https://jgl2832.github.io/Sharkwhirl/
 - simple http server using 'python -m SimpleHTTPServer' running as a daemon for local development purposes
 - auto scroll
 - play music
+- simple stage that has nothing on it. lets just get that far
 - can this be a module on another page somehow
+- undo github pages nonsense for now, just focus on local dev
+- dockerize? maybe a bit much
 
 Created by Jake Levine
