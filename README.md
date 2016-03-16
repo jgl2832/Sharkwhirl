@@ -4,3 +4,5 @@ An accompanying video game for the song 'Sharkwhirl' found here: https://soundcl
 
 Built using Quintus:
 http://www.html5quintus.com/
+
+Created by Jake Levine
