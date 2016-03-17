@@ -10,11 +10,10 @@ https://jgl2832.github.io/Sharkwhirl/
 
 # TODO
 - simple http server using 'python -m SimpleHTTPServer' running as a daemon for local development purposes
-- auto scroll
 - play music
-- simple stage that has nothing on it. lets just get that far
 - can this be a module on another page somehow
 - undo github pages nonsense for now, just focus on local dev
 - dockerize? maybe a bit much
+- TODO figure out how to have background elements that draw on top of other things so they dont look shakey
 
 Created by Jake Levine
