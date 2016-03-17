@@ -32,7 +32,7 @@ Q.Sprite.extend("Player",{
 
   step: function(dt) {
     // TODO smarter speedup?
-    this.p.speed += .5;
+    this.p.speed += Q.state.get("acc");
 
 
     this.p.vx += (this.p.speed - this.p.vx)/4;
@@ -173,11 +173,12 @@ Q.UI.Text.extend("OpeningTitle",{
     });
   },
   step: function(dt) {
-    this.p.x = this.stage.viewport.x + 100;
+    //this.p.x = this.stage.viewport.x + 100;
   }
 });
 
 Q.scene("level1",function(stage) {
+  Q.state.set("acc", 1);
   stage.insert(new Q.BackgroundWall());
 
   stage.insert(new Q.BackgroundFloor());
@@ -191,9 +192,18 @@ Q.scene("level1",function(stage) {
 
 });
 
+Q.scene('hud',function(stage) {
+  var container = stage.insert(new Q.UI.Container({x: 50, y: 0 }));
+
+  var label = container.insert(new Q.UI.Text({x:200, y: 20, label: "Timer: 1:00", color: "white" }));
+
+  container.fit(20);
+});
+
 var resetGame = function() {
     Q.clearStages();
     Q.stageScene("level1");
+    Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
 Q.load("player.json, player.png, background-wall.png, background-floor.png, crates.png, crates.json", function() {
@@ -206,6 +216,7 @@ Q.load("player.json, player.png, background-wall.png, background-floor.png, crat
       duck_right: { frames: [15], rate: 1/10, flip: false },
     });
     Q.stageScene("level1");
+    Q.stageScene("hud", 3, Q('Player').first().p);
   
 });
 
