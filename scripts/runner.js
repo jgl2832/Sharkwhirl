@@ -178,6 +178,25 @@ Q.UI.Text.extend("OpeningTitle",{
   }
 });
 
+Q.UI.Text.extend("Timer",{
+  init: function(p) {
+    this._super(p, {
+      x:200,
+      y: 20,
+      label: "0:00",
+      color: "white"
+    });
+
+  },
+  step: function(dt) {
+    var timeElapsed = Date.now() - Q.state.get("start_time");
+    var secondsElapsed = Math.floor(timeElapsed/1000, -1);
+    Q.state.set("time", secondsElapsed);
+
+    this.p.label = "" + secondsElapsed;
+  }
+});
+
 Q.scene("level1",function(stage) {
   Q.state.set("acc", 1);
   stage.insert(new Q.BackgroundWall());
@@ -194,9 +213,11 @@ Q.scene("level1",function(stage) {
 });
 
 Q.scene('hud',function(stage) {
+  Q.state.set("start_time", Date.now());
+  
   var container = stage.insert(new Q.UI.Container({x: 50, y: 0 }));
 
-  var label = container.insert(new Q.UI.Text({x:200, y: 20, label: "Timer: 1:00", color: "white" }));
+  var label = container.insert(new Q.Timer());
 
   container.fit(20);
 });
