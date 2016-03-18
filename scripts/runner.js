@@ -1,9 +1,10 @@
 window.addEventListener("load",function() {
 
-var Q = window.Q = Quintus()
-        .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI")
+var Q = window.Q = Quintus({ audioSupported: ['mp3']})
+        .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup({ width: 800, height: 600, scaleToFit: true })
         .controls().touch()
+        .enableSound();
 
 var SPRITE_BOX = 1;
 
@@ -104,7 +105,7 @@ Q.Sprite.extend("Box",{
   },
 
   hit: function() {
-    resetGame();
+    stageGame();
     /*
     this.p.type = 0;
     this.p.collisionMask = Q.SPRITE_NONE;
@@ -200,8 +201,10 @@ Q.scene('hud',function(stage) {
   container.fit(20);
 });
 
-var resetGame = function() {
+var stageGame = function() {
+    Q.audio.stop();
     Q.clearStages();
+    Q.audio.play('SHARKWHIRL.mp3');
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
@@ -215,8 +218,9 @@ Q.load("player.json, player.png, background-wall.png, background-floor.png, crat
       stand_right: { frames:[14], rate: 1/10, flip: false },
       duck_right: { frames: [15], rate: 1/10, flip: false },
     });
-    Q.stageScene("level1");
-    Q.stageScene("hud", 3, Q('Player').first().p);
+    Q.load([ "SHARKWHIRL.mp3" ], function() {
+        stageGame();
+    });
   
 });
 
