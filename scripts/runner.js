@@ -142,8 +142,10 @@ Q.GameObject.extend("BoxThrower",{
 Q.Repeater.extend("BackgroundWall",{
   init: function() {
     this._super({
-      asset: "background-wall.png",
-      speedX: 0.5 
+      asset: "city.png",
+      repeatY: false,
+      speedX: 0.5,
+      y: 80
     });
   },
   update: function(dt) {
@@ -162,6 +164,14 @@ Q.Repeater.extend("BackgroundFloor",{
   },
   update: function(dt) {
     //this.p.speedX += dt;
+  }
+});
+
+Q.Repeater.extend("Sky", {
+  init: function() {
+    this._super({
+      asset: "blue.png"
+    });
   }
 });
 
@@ -199,6 +209,9 @@ Q.UI.Text.extend("Timer",{
 
 Q.scene("level1",function(stage) {
   Q.state.set("acc", 0);
+
+  stage.insert(new Q.Sky());
+
   stage.insert(new Q.BackgroundWall());
 
   stage.insert(new Q.BackgroundFloor());
@@ -240,7 +253,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("player.json, player.png, background-wall.png, background-floor.png, crates.png, crates.json", function() {
+Q.load("SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-floor.png, crates.png, crates.json", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
     Q.animations("player", {
@@ -249,9 +262,7 @@ Q.load("player.json, player.png, background-wall.png, background-floor.png, crat
       stand_right: { frames:[14], rate: 1/10, flip: false },
       duck_right: { frames: [15], rate: 1/10, flip: false },
     });
-    Q.load([ "SHARKWHIRL.mp3" ], function() {
-        stageGame();
-    });
+    stageGame();
   
 });
 

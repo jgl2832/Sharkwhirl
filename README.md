@@ -16,6 +16,7 @@ https://jgl2832.github.io/Sharkwhirl/
 - game script
 - loading screen while music and assets are loading?
 - find assets for derek
+- pause game when losing focus
 
 Created by Jake Levine
 Music by Tiny Hazard
