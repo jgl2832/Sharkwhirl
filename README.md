@@ -14,5 +14,8 @@ https://jgl2832.github.io/Sharkwhirl/
 - undo github pages nonsense for now, just focus on local dev
 - dockerize? maybe a bit much
 - game script
+- loading screen while music and assets are loading?
+- find assets for derek
 
 Created by Jake Levine
+Music by Tiny Hazard

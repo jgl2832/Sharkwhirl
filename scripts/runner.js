@@ -198,7 +198,7 @@ Q.UI.Text.extend("Timer",{
 });
 
 Q.scene("level1",function(stage) {
-  Q.state.set("acc", 1);
+  Q.state.set("acc", 0);
   stage.insert(new Q.BackgroundWall());
 
   stage.insert(new Q.BackgroundFloor());
@@ -210,6 +210,16 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.Player());
   stage.add("viewport");
 
+  Q.state.on("change.time",function() {
+    var currTime = Q.state.get("time");
+    switch(currTime) {
+      case 1:
+        Q.state.set("acc", 1);
+        break;
+      case 5:
+        Q.state.set("acc", 0);
+    }
+  });
 });
 
 Q.scene('hud',function(stage) {
