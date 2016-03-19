@@ -193,17 +193,21 @@ Q.UI.Text.extend("Timer",{
     this._super(p, {
       x:200,
       y: 20,
-      label: "0:00",
-      color: "white"
+      label: "0",
+      color: "white",
+      counter: 0
     });
 
   },
   step: function(dt) {
-    var timeElapsed = Date.now() - Q.state.get("start_time");
-    var secondsElapsed = Math.floor(timeElapsed/1000, -1);
-    Q.state.set("time", secondsElapsed);
+    if (!Q.state.get("paused")) {
+      this.p.counter += dt;
+      var secondsElapsed = Math.floor(this.p.counter, -1);
+      Q.state.set("time", secondsElapsed);
 
-    this.p.label = "" + secondsElapsed;
+      this.p.label = "" + secondsElapsed;
+
+    }
   }
 });
 
@@ -248,6 +252,7 @@ Q.scene('hud',function(stage) {
 var stageGame = function() {
     Q.audio.stop();
     Q.clearStages();
+    Q.state.set("paused", false);
     Q.audio.play('SHARKWHIRL.mp3');
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
@@ -265,6 +270,16 @@ Q.load("SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-
     stageGame();
   
 });
+
+document.addEventListener("blur", function() {
+  Q.state.set("paused",true);
+  Q.stage().pause();
+  Q.audio.stop();
+}, true);
+
+document.addEventListener("focus", function() {
+  stageGame();
+}, true);
 
 
 });
