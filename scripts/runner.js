@@ -262,7 +262,7 @@ Q.load("SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
     Q.animations("player", {
-      walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/15, flip: false, loop: true },
+      walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/10, flip: false, loop: true },
       jump_right: { frames: [13], rate: 1/10, flip: false },
       stand_right: { frames:[14], rate: 1/10, flip: false },
       duck_right: { frames: [15], rate: 1/10, flip: false },
