@@ -175,16 +175,13 @@ Q.Repeater.extend("Sky", {
   }
 });
 
-Q.UI.Text.extend("OpeningTitle",{
+Q.Sprite.extend("OpeningText", {
   init: function(p) {
     this._super(p, {
-      x: Q.width/2,
+      x: Q.width/2 - 50,
       y: Q.height/2,
-      label: "Sharkwhirl"
+      asset: "SHARKWHIRL.png"
     });
-  },
-  step: function(dt) {
-    //this.p.x = this.stage.viewport.x + 100;
   }
 });
 
@@ -220,7 +217,7 @@ Q.scene("level1",function(stage) {
 
   stage.insert(new Q.BackgroundFloor());
 
-  stage.insert(new Q.OpeningTitle());
+  stage.insert(new Q.OpeningText());
 
   stage.insert(new Q.BoxThrower());
 
@@ -258,7 +255,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-floor.png, crates.png, crates.json", function() {
+Q.load("SHARKWHIRL.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-floor.png, crates.png, crates.json", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
     Q.animations("player", {
