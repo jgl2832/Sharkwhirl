@@ -122,18 +122,20 @@ Q.Sprite.extend("Box",{
 Q.GameObject.extend("BoxThrower",{
   init: function() {
     this.p = {
-      launchDelay: 0.75,
+      launchDelay: 1.25,
       launchRandom: 1,
       launch: 0
     }
   },
 
   update: function(dt) {
-    this.p.launch -= dt;
+    if (Q.state.get("throwBoxes")) {
+      this.p.launch -= dt;
 
-    if(this.p.launch < 0) {
-      this.stage.insert(new Q.Box());
-      this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+      if(this.p.launch < 0) {
+        this.stage.insert(new Q.Box());
+        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+      }
     }
   }
 
@@ -230,6 +232,7 @@ Q.UI.Text.extend("Timer",{
 
 Q.scene("level1",function(stage) {
   Q.state.set("acc", 0);
+  Q.state.set("throwBoxes", false);
 
   stage.insert(new Q.Sky());
 
@@ -241,6 +244,7 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.JumpText());
   stage.insert(new Q.DuckText());
 
+  var boxThrower = stage.insert(new Q.BoxThrower());
   stage.insert(new Q.Player());
   stage.add("viewport");
 
@@ -254,7 +258,28 @@ Q.scene("level1",function(stage) {
         Q.state.set("acc", 0);
         break;
       case 25: // game starts, start throwing obstacles
-        stage.insert(new Q.BoxThrower());
+        Q.state.set("throwBoxes", true);
+        break;
+      case 35: // increase number and variety of obstacles
+        boxThrower.p.launchDelay = .5;
+        break;
+      case 46: // Add a new type of obstacle, speed up a little bit
+        //TODO
+        break;
+      case 56: // Stop obstacles, background changes color to make it more ominous
+        //TODO
+        break;
+      case 63: // Right on the two musical “hits” (approx 1:03.5 and 1:05), holes in the ground open up, or some kind of new obstacle that appears suddenly and has to be avoided immediately
+        //TODO
+        break;
+      case 66: // Speeds up, obstacles come back, maybe with some new ones
+        //TODO
+        break;
+      case 67: // 1:07.5 - Speeds up more, background gets crazy (flashing? Rainbow?)
+        // TODO (combine top two?)
+        break;
+      case 98: //1:38 - character gets to the end, everything is ok again!
+        // TODO
         break;
     }
   });
