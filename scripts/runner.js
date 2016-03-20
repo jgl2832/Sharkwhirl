@@ -185,6 +185,26 @@ Q.Sprite.extend("OpeningText", {
   }
 });
 
+Q.Sprite.extend("JumpText", {
+  init: function(p) {
+    this._super(p, {
+      x: 1500,
+      y: Q.height/2,
+      asset: "JUMP.png"
+    });
+  }
+});
+
+Q.Sprite.extend("DuckText", {
+  init: function(p) {
+    this._super(p, {
+      x: 3000,
+      y: Q.height/2,
+      asset: "DUCK.png"
+    });
+  }
+});
+
 Q.UI.Text.extend("Timer",{
   init: function(p) {
     this._super(p, {
@@ -218,6 +238,8 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.BackgroundFloor());
 
   stage.insert(new Q.OpeningText());
+  stage.insert(new Q.JumpText());
+  stage.insert(new Q.DuckText());
 
   stage.insert(new Q.Player());
   stage.add("viewport");
@@ -257,7 +279,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-floor.png, crates.png, crates.json", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-floor.png, crates.png, crates.json", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
     Q.animations("player", {
