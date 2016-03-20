@@ -20,10 +20,11 @@ Q.Sprite.extend("Player",{
       collisionMask: SPRITE_BOX, 
       x: 40,
       y: 555,
+      gravity: 2,
       standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
       duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
       speed: 0,
-      jump: -700
+      jump: -1200
     });
 
     this.p.points = this.p.standingPoints;
@@ -106,14 +107,6 @@ Q.Sprite.extend("Box",{
 
   hit: function() {
     stageGame();
-    /*
-    this.p.type = 0;
-    this.p.collisionMask = Q.SPRITE_NONE;
-    this.p.vx = 200;
-    this.p.ay = 400;
-    this.p.vy = -300;
-    this.p.opacity = 0.5;
-    */
   }
   
 
@@ -182,6 +175,7 @@ Q.Sprite.extend("OpeningText", {
     this._super(p, {
       x: Q.width/2 - 50,
       y: Q.height/2,
+      collisionMask: Q.SPRITE_NONE, 
       asset: "SHARKWHIRL.png"
     });
   }
@@ -192,6 +186,7 @@ Q.Sprite.extend("JumpText", {
     this._super(p, {
       x: 1500,
       y: Q.height/2,
+      collisionMask: Q.SPRITE_NONE, 
       asset: "JUMP.png"
     });
   }
@@ -202,6 +197,7 @@ Q.Sprite.extend("DuckText", {
     this._super(p, {
       x: 3000,
       y: Q.height/2,
+      collisionMask: Q.SPRITE_NONE, 
       asset: "DUCK.png"
     });
   }
