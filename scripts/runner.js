@@ -124,7 +124,7 @@ Q.GameObject.extend("BoxThrower",{
     this.p = {
       launchDelay: 0.75,
       launchRandom: 1,
-      launch: 2
+      launch: 0
     }
   },
 
@@ -219,19 +219,21 @@ Q.scene("level1",function(stage) {
 
   stage.insert(new Q.OpeningText());
 
-  stage.insert(new Q.BoxThrower());
-
   stage.insert(new Q.Player());
   stage.add("viewport");
 
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
     switch(currTime) {
-      case 1:
+      case 5: // start to move away from title
         Q.state.set("acc", 1);
         break;
-      case 5:
+      case 9: // keep consistent speed and show instructions
         Q.state.set("acc", 0);
+        break;
+      case 25: // game starts, start throwing obstacles
+        stage.insert(new Q.BoxThrower());
+        break;
     }
   });
 });
