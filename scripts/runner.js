@@ -78,20 +78,23 @@ Q.Sprite.extend("Box",{
       x: player.p.x + Q.width + 50,
       y: levels[Math.floor(Math.random() * 3)],
       frame: Math.random() < 0.5 ? 1 : 0,
-      scale: 2,
+      scale: .75,
       type: SPRITE_BOX,
-      sheet: "crates",
+      sheet: "shark",
+      sprite: "shark",
       vx: -600 + 200 * Math.random(),
       vy: 0,
       ay: 0,
-      theta: (300 * Math.random() + 200) * (Math.random() < 0.5 ? 1 : -1)
+      theta: 0
     });
 
 
     this.on("hit");
+    this.add("animation");
   },
 
   step: function(dt) {
+    this.play("swim_left");
     this.p.x += this.p.vx * dt;
 
 
@@ -300,14 +303,18 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, city.png, background-floor.png, crates.png, crates.json", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, city.png, background-floor.png, crates.png, crates.json", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("crates.png","crates.json");
+    Q.compileSheets("shark.png","shark.json");
     Q.animations("player", {
       walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/10, flip: false, loop: true },
       jump_right: { frames: [13], rate: 1/10, flip: false },
       stand_right: { frames:[14], rate: 1/10, flip: false },
       duck_right: { frames: [15], rate: 1/10, flip: false },
+    });
+    Q.animations("shark", {
+      swim_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
     });
     stageGame();
   
