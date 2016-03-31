@@ -162,10 +162,10 @@ Q.Repeater.extend("BackgroundWall",{
 Q.Repeater.extend("BackgroundFloor",{
   init: function() {
     this._super({
-      asset: "background-floor.png",
+      asset: "street.png",
       repeatY: false,
       speedX: 1.0,
-      y: 300
+      y: 295
     });
   },
   update: function(dt) {
@@ -313,7 +313,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, suit.png, suit.json, city.png, background-floor.png", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, suit.png, suit.json, city.png, street.png", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("suit.png", "suit.json");
     Q.compileSheets("shark.png","shark.json");
