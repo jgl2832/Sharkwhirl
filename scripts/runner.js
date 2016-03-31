@@ -151,7 +151,7 @@ Q.Repeater.extend("BackgroundWall",{
       asset: "city.png",
       repeatY: false,
       speedX: 0.5,
-      y: 80
+      y: 75
     });
   },
   update: function(dt) {
