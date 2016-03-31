@@ -20,7 +20,7 @@ Q.Sprite.extend("Player",{
       scale: 2,
       collisionMask: SPRITE_BOX, 
       x: 40,
-      y: 555,
+      y: 400,
       gravity: 2,
       standingPoints: [ [-14,-26], [-14, 26], [14, 26], [14, -26] ],
       duckingPoints: [ [-14, -6], [-14, 26], [14, 26], [14, -6] ],
@@ -328,7 +328,7 @@ Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.jso
     Q.animations("suit", {
       walk_right: {frames: [0,1,2,3], rate: 1/2, loop: true},
       jump_right: {frames: [4], rate: 1/2, flip: false },
-      stand_right: {frames: [0], rate: 1/2, flip: false },
+      stand_right: {frames: [6], rate: 1/2, flip: false },
       duck_right: {frames: [5], rate: 1/2, flip: false }
     });
     Q.animations("shark", {
