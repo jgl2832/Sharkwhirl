@@ -15,14 +15,17 @@ Q.Sprite.extend("Player",{
   init: function(p) {
 
     this._super(p,{
-      sheet: "player",
-      sprite: "player",
+      sheet: "suit",
+      sprite: "suit",
+      scale: 2,
       collisionMask: SPRITE_BOX, 
       x: 40,
       y: 555,
       gravity: 2,
-      standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
-      duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
+      standingPoints: [ [-14,-26], [-14, 26], [14, 26], [14, -26] ],
+      duckingPoints: [ [-14, -6], [-14, 26], [14, 26], [14, -6] ],
+      //standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
+      //duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
       speed: 0,
       jump: -1200
     });
@@ -30,6 +33,7 @@ Q.Sprite.extend("Player",{
     this.p.points = this.p.standingPoints;
 
     this.add("2d, animation");
+    this.play("stand_right");
   },
 
   step: function(dt) {
@@ -47,20 +51,24 @@ Q.Sprite.extend("Player",{
       this.p.landed = 0;
     }
 
-    if(Q.inputs['up'] && this.p.landed > 0) {
+    if(Q.state.get("moving") && Q.inputs['up'] && this.p.landed > 0) {
       this.p.vy = this.p.jump;
     } 
 
     this.p.points = this.p.standingPoints;
-    if(this.p.landed) {
-      if(Q.inputs['down']) { 
-        this.play("duck_right");
-        this.p.points = this.p.duckingPoints;
+    if (Q.state.get("moving")) {
+      if(this.p.landed) {
+        if(Q.inputs['down']) { 
+          this.play("duck_right");
+          this.p.points = this.p.duckingPoints;
+        } else {
+          this.play("walk_right");
+        }
       } else {
-        this.play("walk_right");
+        this.play("jump_right");
       }
     } else {
-      this.play("jump_right");
+      this.play("stand_right");
     }
 
     this.stage.viewport.centerOn(this.p.x + 300, 400 );
@@ -71,7 +79,7 @@ Q.Sprite.extend("Player",{
 Q.Sprite.extend("Box",{
   init: function() {
 
-    var levels = [ 565, 540, 500, 450 ];
+    var levels = [ 565, 540, 500, 440 ];
 
     var player = Q("Player").first();
     this._super({
@@ -232,6 +240,7 @@ Q.UI.Text.extend("Timer",{
 Q.scene("level1",function(stage) {
   Q.state.set("acc", 0);
   Q.state.set("throwBoxes", false);
+  Q.state.set("moving", false);
 
   stage.insert(new Q.Sky());
 
@@ -252,6 +261,7 @@ Q.scene("level1",function(stage) {
     switch(currTime) {
       case 5: // start to move away from title
         Q.state.set("acc", 1);
+        Q.state.set("moving", true);
         break;
       case 9: // keep consistent speed and show instructions
         Q.state.set("acc", 0);
@@ -303,15 +313,23 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, city.png, background-floor.png, crates.png, crates.json", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, suit.png, suit.json, city.png, background-floor.png", function() {
     Q.compileSheets("player.png","player.json");
-    Q.compileSheets("crates.png","crates.json");
+    Q.compileSheets("suit.png", "suit.json");
     Q.compileSheets("shark.png","shark.json");
+    /*
     Q.animations("player", {
       walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/10, flip: false, loop: true },
       jump_right: { frames: [13], rate: 1/10, flip: false },
       stand_right: { frames:[14], rate: 1/10, flip: false },
       duck_right: { frames: [15], rate: 1/10, flip: false },
+    });
+    */
+    Q.animations("suit", {
+      walk_right: {frames: [0,1,2,3], rate: 1/2, loop: true},
+      jump_right: {frames: [4], rate: 1/2, flip: false },
+      stand_right: {frames: [0], rate: 1/2, flip: false },
+      duck_right: {frames: [5], rate: 1/2, flip: false }
     });
     Q.animations("shark", {
       swim_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
