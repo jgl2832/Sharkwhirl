@@ -8,7 +8,7 @@ var Q = window.Q = Quintus({ audioSupported: ['mp3']})
 
 var SPRITE_BOX = 1;
 
-Q.gravityY = 2000;
+Q.gravityY = 4000;
 
 Q.Sprite.extend("Player",{
 
@@ -21,7 +21,7 @@ Q.Sprite.extend("Player",{
       collisionMask: SPRITE_BOX, 
       x: 40,
       y: 400,
-      gravity: 2,
+      //gravity: 1,
       standingPoints: [ [-14,-26], [-14, 26], [14, 26], [14, -26] ],
       duckingPoints: [ [-14, -6], [-14, 26], [14, 26], [14, -6] ],
       //standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
@@ -71,8 +71,7 @@ Q.Sprite.extend("Player",{
       this.play("stand_right");
     }
 
-    this.stage.viewport.centerOn(this.p.x + 300, 400 );
-
+    //this.stage.viewport.centerOn(this.p.x + 300, 400 );
   }
 });
 
@@ -253,8 +252,11 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.DuckText());
 
   var boxThrower = stage.insert(new Q.BoxThrower());
-  stage.insert(new Q.Player());
-  stage.add("viewport");
+  var player = new Q.Player();
+  stage.insert(player);
+  stage.add("viewport").follow(player, {x: true, y: false});
+  stage.viewport.offsetX = -275;
+  stage.viewport.centerOn(player.p.x, 400 );
 
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
