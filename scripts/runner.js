@@ -186,7 +186,7 @@ Q.Sprite.extend("OpeningText", {
     this._super(p, {
       x: Q.width/2 - 50,
       y: Q.height/2,
-      collisionMask: Q.SPRITE_NONE, 
+      type: Q.SPRITE_NONE, 
       asset: "SHARKWHIRL.png"
     });
   }
@@ -197,7 +197,7 @@ Q.Sprite.extend("JumpText", {
     this._super(p, {
       x: 1500,
       y: Q.height/2,
-      collisionMask: Q.SPRITE_NONE, 
+      type: Q.SPRITE_NONE, 
       asset: "JUMP.png"
     });
   }
@@ -208,7 +208,7 @@ Q.Sprite.extend("DuckText", {
     this._super(p, {
       x: 3000,
       y: Q.height/2,
-      collisionMask: Q.SPRITE_NONE, 
+      type: Q.SPRITE_NONE, 
       asset: "DUCK.png"
     });
   }
@@ -326,10 +326,10 @@ Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.jso
     });
     */
     Q.animations("suit", {
-      walk_right: {frames: [0,1,2,3], rate: 1/2, loop: true},
-      jump_right: {frames: [4], rate: 1/2, flip: false },
-      stand_right: {frames: [6], rate: 1/2, flip: false },
-      duck_right: {frames: [5], rate: 1/2, flip: false }
+      walk_right: {frames: [0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3], rate: 1/10, loop: true},
+      jump_right: {frames: [4], rate: 1/20, flip: false },
+      stand_right: {frames: [6], rate: 1/20, flip: false },
+      duck_right: {frames: [5], rate: 1/20, flip: false }
     });
     Q.animations("shark", {
       swim_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
