@@ -8,7 +8,7 @@ var Q = window.Q = Quintus({ audioSupported: ['mp3']})
 
 var SPRITE_BOX = 1;
 
-Q.gravityY = 4000;
+Q.gravityY = 1600;
 
 Q.Sprite.extend("Player",{
 
@@ -21,7 +21,7 @@ Q.Sprite.extend("Player",{
       collisionMask: SPRITE_BOX, 
       x: 40,
       y: 400,
-      //gravity: 1,
+      gravity: 2,
       standingPoints: [ [-14,-26], [-14, 26], [14, 26], [14, -26] ],
       duckingPoints: [ [-14, -6], [-14, 26], [14, 26], [14, -6] ],
       //standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
