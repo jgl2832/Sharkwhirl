@@ -1,4 +1,18 @@
+function getParameterByName(name, url) {
+  if (!url) url = window.location.href;
+  name = name.replace(/[\[\]]/g, "\\$&");
+  var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)", "i"),
+  results = regex.exec(url);
+  if (!results) return null;
+  if (!results[2]) return '';
+  return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 window.addEventListener("load",function() {
+
+// TODO
+// better collision detection with the sharks
+// training walls
 
 var Q = window.Q = Quintus({ audioSupported: ['mp3']})
         .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
@@ -6,9 +20,14 @@ var Q = window.Q = Quintus({ audioSupported: ['mp3']})
         .controls().touch()
         .enableSound();
 
+if ( getParameterByName("debug") === "true" ) {
+  Q.debug = true;
+  Q.debugFill = true;
+}
+
 var SPRITE_BOX = 1;
 
-Q.gravityY = 1600;
+Q.gravityY = 1750;
 
 Q.Sprite.extend("Player",{
 
@@ -31,9 +50,24 @@ Q.Sprite.extend("Player",{
     });
 
     this.p.points = this.p.standingPoints;
+    this.on("bump.left", this, "die");
+    this.on("bump.right", this, "die");
+    this.on("bump.top", this, "die");
+    this.on("bump.bottom", this, "stomp");
 
     this.add("2d, animation");
     this.play("stand_right");
+  },
+
+  die: function() {
+    stageGame();
+  },
+
+  stomp: function(coll) {
+    if(coll.obj.isA("Box")) {
+      coll.obj.destroy();
+      this.p.vy = -500; // make the player jump
+    }
   },
 
   step: function(dt) {
@@ -96,7 +130,6 @@ Q.Sprite.extend("Box",{
     });
 
 
-    this.on("hit");
     this.add("animation");
   },
 
@@ -114,10 +147,6 @@ Q.Sprite.extend("Box",{
     if(this.p.y > 800) { this.destroy(); }
 
   },
-
-  hit: function() {
-    stageGame();
-  }
   
 
 });
@@ -272,7 +301,7 @@ Q.scene("level1",function(stage) {
         Q.state.set("throwBoxes", true);
         break;
       case 35: // increase number and variety of obstacles
-        boxThrower.p.launchDelay = .5;
+        boxThrower.p.launchDelay = .75;
         break;
       case 46: // Add a new type of obstacle, speed up a little bit
         //TODO
