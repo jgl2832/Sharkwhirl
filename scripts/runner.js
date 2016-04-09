@@ -350,7 +350,7 @@ Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.jso
     });
     */
     Q.animations("suit", {
-      walk_right: {frames: [0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3], rate: 1/10, loop: true},
+      walk_right: {frames: [0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3], rate: 1/15, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false },
       stand_right: {frames: [6], rate: 1/20, flip: false },
       duck_right: {frames: [5], rate: 1/20, flip: false }
