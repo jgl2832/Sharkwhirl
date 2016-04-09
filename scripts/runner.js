@@ -176,10 +176,11 @@ Q.GameObject.extend("BoxThrower",{
 Q.Repeater.extend("BackgroundWall",{
   init: function() {
     this._super({
-      asset: "city.png",
+      asset: "city-large.png",
       repeatY: false,
-      speedX: 0.5,
-      y: 75
+      speedX: 0.75,
+      scale: 1,
+      y: 20
     });
   },
   update: function(dt) {
@@ -344,7 +345,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, suit.png, suit.json, city.png, street.png", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, suit.png, suit.json, city-large.png, street.png", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("suit.png", "suit.json");
     Q.compileSheets("shark.png","shark.json");
