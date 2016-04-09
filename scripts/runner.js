@@ -220,7 +220,7 @@ Q.Sprite.extend("OpeningText", {
 Q.Sprite.extend("JumpText", {
   init: function(p) {
     this._super(p, {
-      x: 1500,
+      x: 1000,
       y: Q.height/2,
       type: Q.SPRITE_NONE, 
       asset: "JUMP.png"
@@ -231,7 +231,7 @@ Q.Sprite.extend("JumpText", {
 Q.Sprite.extend("DuckText", {
   init: function(p) {
     this._super(p, {
-      x: 3000,
+      x: 1500,
       y: Q.height/2,
       type: Q.SPRITE_NONE, 
       asset: "DUCK.png"
@@ -288,12 +288,10 @@ Q.scene("level1",function(stage) {
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
     switch(currTime) {
-      case 5:
+      case 5: // show instructions
         break;
-      case 9: // keep consistent speed and show instructions
-        Q.state.set("throwBoxes", true); // moved temp
-        break;
-      case 25: // game starts, start throwing obstacles
+      case 10: // enemys start TODO can we do something on a half strike?
+        Q.state.set("throwBoxes", true);
         break;
       case 35: // increase number and variety of obstacles
         boxThrower.p.launchDelay = .75;
