@@ -38,14 +38,14 @@ Q.Sprite.extend("Player",{
       sprite: "suit",
       scale: 2,
       collisionMask: SPRITE_BOX, 
-      x: 40,
+      x: -700,
       y: 400,
       gravity: 2,
       standingPoints: [ [-14,-26], [-14, 26], [14, 26], [14, -26] ],
       duckingPoints: [ [-14, -6], [-14, 26], [14, 26], [14, -6] ],
       //standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
       //duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
-      speed: 0,
+      speed: 300,
       jump: -1200
     });
 
@@ -123,10 +123,9 @@ Q.Sprite.extend("Box",{
       type: SPRITE_BOX,
       sheet: "shark",
       sprite: "shark",
-      vx: -600 + 200 * Math.random(),
+      vx: -400 + 200 * Math.random(),
       vy: 0,
-      ay: 0,
-      theta: 0
+      ay: 0
     });
 
 
@@ -140,9 +139,6 @@ Q.Sprite.extend("Box",{
 
     this.p.vy += this.p.ay * dt;
     this.p.y += this.p.vy * dt;
-    if(this.p.y != 565) {
-      this.p.angle += this.p.theta * dt;
-    }
 
     if(this.p.y > 800) { this.destroy(); }
 
@@ -269,7 +265,7 @@ Q.UI.Text.extend("Timer",{
 Q.scene("level1",function(stage) {
   Q.state.set("acc", 0);
   Q.state.set("throwBoxes", false);
-  Q.state.set("moving", false);
+  Q.state.set("moving", true);
 
   stage.insert(new Q.Sky());
 
@@ -288,18 +284,16 @@ Q.scene("level1",function(stage) {
   stage.viewport.offsetX = -275;
   stage.viewport.centerOn(player.p.x, 400 );
 
+  // SCRIPT
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
     switch(currTime) {
-      case 5: // start to move away from title
-        Q.state.set("acc", 1);
-        Q.state.set("moving", true);
+      case 5:
         break;
       case 9: // keep consistent speed and show instructions
-        Q.state.set("acc", 0);
+        Q.state.set("throwBoxes", true); // moved temp
         break;
       case 25: // game starts, start throwing obstacles
-        Q.state.set("throwBoxes", true);
         break;
       case 35: // increase number and variety of obstacles
         boxThrower.p.launchDelay = .75;
