@@ -64,7 +64,7 @@ Q.Sprite.extend("Player",{
   },
 
   stomp: function(coll) {
-    if(coll.obj.isA("Box")) {
+    if(coll.obj.isA("Shark") || coll.obj.isA("Pig")) {
       coll.obj.destroy();
       this.p.vy = -500; // make the player jump
     }
@@ -122,6 +122,7 @@ Q.Sprite.extend("Pig",{
       type: SPRITE_BOX,
       sheet: "pig",
       sprite: "pig",
+      points: [ [-30,-40], [-50, 40], [50, 40], [30, -40] ],
       vx: -400 + 200 * Math.random(),
       vy: 0,
       ay: 0
@@ -145,7 +146,7 @@ Q.Sprite.extend("Pig",{
   
 
 });
-Q.Sprite.extend("Box",{
+Q.Sprite.extend("Shark",{
   init: function() {
 
     var levels = [ 540, 500, 440 ];
@@ -183,7 +184,7 @@ Q.Sprite.extend("Box",{
 
 });
 
-Q.GameObject.extend("BoxThrower",{
+Q.GameObject.extend("SharkThrower",{
   init: function() {
     this.p = {
       launchDelay: 1.25,
@@ -193,11 +194,11 @@ Q.GameObject.extend("BoxThrower",{
   },
 
   update: function(dt) {
-    if (Q.state.get("throwBoxes")) {
+    if (Q.state.get("throwSharks")) {
       this.p.launch -= dt;
 
       if(this.p.launch < 0) {
-        this.stage.insert(new Q.Box());
+        this.stage.insert(new Q.Shark());
         this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
       }
     }
@@ -215,7 +216,7 @@ Q.GameObject.extend("PigThrower",{
   },
 
   update: function(dt) {
-    if (Q.state.get("throwBoxes")) {
+    if (Q.state.get("throwPigs")) {
       this.p.launch -= dt;
 
       if(this.p.launch < 0) {
@@ -322,7 +323,8 @@ Q.UI.Text.extend("Timer",{
 
 Q.scene("level1",function(stage) {
   Q.state.set("acc", 0);
-  Q.state.set("throwBoxes", false);
+  Q.state.set("throwSharks", false);
+  Q.state.set("throwPigs", false);
   Q.state.set("moving", true);
 
   stage.insert(new Q.Sky());
@@ -335,7 +337,7 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.JumpText());
   stage.insert(new Q.DuckText());
 
-  var boxThrower = stage.insert(new Q.BoxThrower());
+  var sharkThrower = stage.insert(new Q.SharkThrower());
   var pigThrower = stage.insert(new Q.PigThrower());
   var player = new Q.Player();
   stage.insert(player);
@@ -350,10 +352,12 @@ Q.scene("level1",function(stage) {
       case 5: // show instructions
         break;
       case 10: // enemys start TODO can we do something on a half strike?
-        Q.state.set("throwBoxes", true);
+        Q.state.set("throwPigs", true);
+        break;
+      case 25:
+        Q.state.set("throwSharks", true);
         break;
       case 35: // increase number and variety of obstacles
-        boxThrower.p.launchDelay = .75;
         break;
       case 46: // Add a new type of obstacle, speed up a little bit
         //TODO
