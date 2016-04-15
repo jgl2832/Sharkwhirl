@@ -71,7 +71,6 @@ Q.Sprite.extend("Player",{
   },
 
   step: function(dt) {
-    // TODO smarter speedup?
     this.p.speed += Q.state.get("acc");
 
 
@@ -109,15 +108,52 @@ Q.Sprite.extend("Player",{
   }
 });
 
-Q.Sprite.extend("Box",{
+Q.Sprite.extend("Pig",{
   init: function() {
 
-    var levels = [ 565, 540, 500, 440 ];
+    var levels = [ 565 ];
 
     var player = Q("Player").first();
     this._super({
       x: player.p.x + Q.width + 50,
-      y: levels[Math.floor(Math.random() * 3)],
+      y: levels[Math.floor(Math.random() * 0)],
+      frame: Math.random() < 0.5 ? 1 : 0,
+      scale: .75,
+      type: SPRITE_BOX,
+      sheet: "pig",
+      sprite: "pig",
+      vx: -400 + 200 * Math.random(),
+      vy: 0,
+      ay: 0
+    });
+
+
+    this.add("animation");
+  },
+
+  step: function(dt) {
+    this.play("walk_left");
+    this.p.x += this.p.vx * dt;
+
+
+    this.p.vy += this.p.ay * dt;
+    this.p.y += this.p.vy * dt;
+
+    if(this.p.y > 800) { this.destroy(); }
+
+  },
+  
+
+});
+Q.Sprite.extend("Box",{
+  init: function() {
+
+    var levels = [ 540, 500, 440 ];
+
+    var player = Q("Player").first();
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: levels[Math.floor(Math.random() * 2)],
       frame: Math.random() < 0.5 ? 1 : 0,
       scale: .75,
       type: SPRITE_BOX,
@@ -162,6 +198,28 @@ Q.GameObject.extend("BoxThrower",{
 
       if(this.p.launch < 0) {
         this.stage.insert(new Q.Box());
+        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
+      }
+    }
+  }
+
+});
+
+Q.GameObject.extend("PigThrower",{
+  init: function() {
+    this.p = {
+      launchDelay: 1.25,
+      launchRandom: 1,
+      launch: 0
+    }
+  },
+
+  update: function(dt) {
+    if (Q.state.get("throwBoxes")) {
+      this.p.launch -= dt;
+
+      if(this.p.launch < 0) {
+        this.stage.insert(new Q.Pig());
         this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
       }
     }
@@ -278,6 +336,7 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.DuckText());
 
   var boxThrower = stage.insert(new Q.BoxThrower());
+  var pigThrower = stage.insert(new Q.PigThrower());
   var player = new Q.Player();
   stage.insert(player);
   stage.add("viewport").follow(player, {x: true, y: false});
@@ -337,10 +396,11 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, shark.png, shark.json, suit.png, suit.json, city-large.png, street.png", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, pig.png, pig.json, shark.png, shark.json, suit.png, suit.json, city-large.png, street.png", function() {
     Q.compileSheets("player.png","player.json");
     Q.compileSheets("suit.png", "suit.json");
     Q.compileSheets("shark.png","shark.json");
+    Q.compileSheets("pig.png", "pig.json");
     /*
     Q.animations("player", {
       walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/10, flip: false, loop: true },
@@ -357,6 +417,9 @@ Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.jso
     });
     Q.animations("shark", {
       swim_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
+    });
+    Q.animations("pig", {
+      walk_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
     });
     stageGame();
   
