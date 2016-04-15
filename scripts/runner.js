@@ -66,7 +66,7 @@ Q.Sprite.extend("Player",{
   stomp: function(coll) {
     if(coll.obj.isA("Shark") || coll.obj.isA("Pig")) {
       coll.obj.destroy();
-      this.p.vy = -500; // make the player jump
+      this.p.vy = -700; // make the player jump
     }
   },
 
@@ -111,12 +111,10 @@ Q.Sprite.extend("Player",{
 Q.Sprite.extend("Pig",{
   init: function() {
 
-    var levels = [ 565 ];
-
     var player = Q("Player").first();
     this._super({
       x: player.p.x + Q.width + 50,
-      y: levels[Math.floor(Math.random() * 0)],
+      y: 565,
       frame: Math.random() < 0.5 ? 1 : 0,
       scale: .75,
       type: SPRITE_BOX,
@@ -149,12 +147,10 @@ Q.Sprite.extend("Pig",{
 Q.Sprite.extend("Shark",{
   init: function() {
 
-    var levels = [ 540, 500, 440 ];
-
     var player = Q("Player").first();
     this._super({
       x: player.p.x + Q.width + 50,
-      y: levels[Math.floor(Math.random() * 2)],
+      y: 500,
       frame: Math.random() < 0.5 ? 1 : 0,
       scale: .75,
       type: SPRITE_BOX,
@@ -184,7 +180,7 @@ Q.Sprite.extend("Shark",{
 
 });
 
-Q.GameObject.extend("SharkThrower",{
+Q.GameObject.extend("Thrower",{
   init: function() {
     this.p = {
       launchDelay: 1.25,
@@ -194,33 +190,29 @@ Q.GameObject.extend("SharkThrower",{
   },
 
   update: function(dt) {
+    var thingsToThrow = [];
     if (Q.state.get("throwSharks")) {
-      this.p.launch -= dt;
-
-      if(this.p.launch < 0) {
-        this.stage.insert(new Q.Shark());
-        this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
-      }
+      thingsToThrow.push("shark");
     }
-  }
-
-});
-
-Q.GameObject.extend("PigThrower",{
-  init: function() {
-    this.p = {
-      launchDelay: 1.25,
-      launchRandom: 1,
-      launch: 0
-    }
-  },
-
-  update: function(dt) {
     if (Q.state.get("throwPigs")) {
+      thingsToThrow.push("pig");
+    }
+    if (thingsToThrow.length > 0) {
       this.p.launch -= dt;
 
       if(this.p.launch < 0) {
-        this.stage.insert(new Q.Pig());
+        if (Q.state.get("nextThrowShark") && Q.state.get("throwSharks")) {
+          thing = "shark";
+          Q.state.set("nextThrowShark", false);
+        } else {
+          thing = thingsToThrow[Math.floor(Math.random() * thingsToThrow.length)];
+        }
+
+        if ( thing == "shark" ) {
+          this.stage.insert(new Q.Shark());
+        } else if ( thing == "pig" ) {
+          this.stage.insert(new Q.Pig());
+        }
         this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
       }
     }
@@ -325,6 +317,7 @@ Q.scene("level1",function(stage) {
   Q.state.set("acc", 0);
   Q.state.set("throwSharks", false);
   Q.state.set("throwPigs", false);
+  Q.state.set("nextThrowShark", false);
   Q.state.set("moving", true);
 
   stage.insert(new Q.Sky());
@@ -337,8 +330,7 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.JumpText());
   stage.insert(new Q.DuckText());
 
-  var sharkThrower = stage.insert(new Q.SharkThrower());
-  var pigThrower = stage.insert(new Q.PigThrower());
+  var thrower = stage.insert(new Q.Thrower());
   var player = new Q.Player();
   stage.insert(player);
   stage.add("viewport").follow(player, {x: true, y: false});
@@ -355,6 +347,9 @@ Q.scene("level1",function(stage) {
         Q.state.set("throwPigs", true);
         break;
       case 25:
+        thrower.p.launchDelay = .75;
+        thrower.p.launch = 0;
+        Q.state.set("nextThrowShark", true);
         Q.state.set("throwSharks", true);
         break;
       case 35: // increase number and variety of obstacles
