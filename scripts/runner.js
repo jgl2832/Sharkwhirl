@@ -34,9 +34,9 @@ Q.Sprite.extend("Player",{
   init: function(p) {
 
     this._super(p,{
-      sheet: "suit",
-      sprite: "suit",
-      scale: 2,
+      sheet: "derek",
+      sprite: "derek",
+      scale: 1.5,
       collisionMask: SPRITE_BOX, 
       x: -700,
       y: 400,
@@ -395,9 +395,10 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.json, player.png, pig.png, pig.json, shark.png, shark.json, suit.png, suit.json, city-large.png, street.png", function() {
-    Q.compileSheets("player.png","player.json");
-    Q.compileSheets("suit.png", "suit.json");
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, derek.json, derek.png, pig.png, pig.json, shark.png, shark.json, city-large.png, street.png", function() {
+    //Q.compileSheets("player.png","player.json");
+    //Q.compileSheets("suit.png", "suit.json");
+    Q.compileSheets("derek.png", "derek.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
     /*
@@ -407,12 +408,18 @@ Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, player.jso
       stand_right: { frames:[14], rate: 1/10, flip: false },
       duck_right: { frames: [15], rate: 1/10, flip: false },
     });
-    */
     Q.animations("suit", {
       walk_right: {frames: [0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3], rate: 1/15, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false },
       stand_right: {frames: [6], rate: 1/20, flip: false },
       duck_right: {frames: [5], rate: 1/20, flip: false }
+    });
+    */
+    Q.animations("derek", {
+      walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/7, loop: true},
+      jump_right: {frames: [4], rate: 1/20, flip: false},
+      stand_right: {frames: [2], rate: 1/20, flip: false},
+      duck_right: {frames:[2], rate: 1/20, flip: false}
     });
     Q.animations("shark", {
       swim_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
