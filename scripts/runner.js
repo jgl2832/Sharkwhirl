@@ -60,6 +60,7 @@ Q.Sprite.extend("Player",{
   die: function() {
     this.play("explode");
     Q.stage().pause();
+    Q.audio.stop();
     setTimeout(stageGame, 1000);
   },
 
