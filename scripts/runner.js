@@ -58,7 +58,9 @@ Q.Sprite.extend("Player",{
   },
 
   die: function() {
-    stageGame();
+    this.play("explode");
+    Q.stage().pause();
+    setTimeout(stageGame, 1000);
   },
 
   stomp: function(coll) {
@@ -401,7 +403,8 @@ Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, derek2.jso
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/7, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false},
       stand_right: {frames: [2], rate: 1/20, flip: false},
-      duck_right: {frames:[8], rate: 1/20, flip: false}
+      duck_right: {frames:[8], rate: 1/20, flip: false},
+      explode: {frames:[9], rate: 1/20, flip: false},
     });
     Q.animations("shark", {
       swim_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
