@@ -34,17 +34,15 @@ Q.Sprite.extend("Player",{
   init: function(p) {
 
     this._super(p,{
-      sheet: "derek",
-      sprite: "derek",
-      scale: 1.5,
+      sheet: "derek2",
+      sprite: "derek2",
+      scale: 3,
       collisionMask: SPRITE_BOX, 
       x: -700,
       y: 400,
       gravity: 2,
-      standingPoints: [ [-14,-26], [-14, 26], [14, 26], [14, -26] ],
-      duckingPoints: [ [-14, -6], [-14, 26], [14, 26], [14, -6] ],
-      //standingPoints: [ [ -16, 44], [ -23, 35 ], [-23,-48], [23,-48], [23, 35 ], [ 16, 44 ]],
-      //duckingPoints : [ [ -16, 44], [ -23, 35 ], [-23,-10], [23,-10], [23, 35 ], [ 16, 44 ]],
+      standingPoints: [ [-10,-16], [-10, 16], [4, 16], [4, -16] ],
+      duckingPoints: [ [-10, -6], [-10, 16], [4, 16], [4, -6] ],
       speed: 300,
       jump: -1200
     });
@@ -395,27 +393,11 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, derek.json, derek.png, pig.png, pig.json, shark.png, shark.json, city-large.png, street.png", function() {
-    //Q.compileSheets("player.png","player.json");
-    //Q.compileSheets("suit.png", "suit.json");
-    Q.compileSheets("derek.png", "derek.json");
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, derek2.json, derek2.png, pig.png, pig.json, shark.png, shark.json, city-large.png, street.png", function() {
+    Q.compileSheets("derek2.png", "derek2.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
-    /*
-    Q.animations("player", {
-      walk_right: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/10, flip: false, loop: true },
-      jump_right: { frames: [13], rate: 1/10, flip: false },
-      stand_right: { frames:[14], rate: 1/10, flip: false },
-      duck_right: { frames: [15], rate: 1/10, flip: false },
-    });
-    Q.animations("suit", {
-      walk_right: {frames: [0,0,0,0,0,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3], rate: 1/15, loop: true},
-      jump_right: {frames: [4], rate: 1/20, flip: false },
-      stand_right: {frames: [6], rate: 1/20, flip: false },
-      duck_right: {frames: [5], rate: 1/20, flip: false }
-    });
-    */
-    Q.animations("derek", {
+    Q.animations("derek2", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/7, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false},
       stand_right: {frames: [2], rate: 1/20, flip: false},
