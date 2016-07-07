@@ -224,12 +224,12 @@ Q.GameObject.extend("Thrower",{
 Q.Repeater.extend("BackgroundWall",{
   init: function() {
     this._super({
-      asset: "city-large.png",
+      asset: "derek-background.png",
       repeatY: false,
-      speedX: 0.75,
-      scale: 1,
-      y: 20
+      speedX: 1.00,
+      y: 47.5
     });
+    //alert(this.p.w);
   },
   update: function(dt) {
     //this.p.speedX += dt;
@@ -247,14 +247,6 @@ Q.Repeater.extend("BackgroundFloor",{
   },
   update: function(dt) {
     //this.p.speedX += dt;
-  }
-});
-
-Q.Repeater.extend("Sky", {
-  init: function() {
-    this._super({
-      asset: "blue.png"
-    });
   }
 });
 
@@ -320,8 +312,6 @@ Q.scene("level1",function(stage) {
   Q.state.set("throwPigs", false);
   Q.state.set("nextThrowShark", false);
   Q.state.set("moving", true);
-
-  stage.insert(new Q.Sky());
 
   stage.insert(new Q.BackgroundWall());
 
@@ -396,7 +386,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, derek2.json, derek2.png, pig.png, pig.json, shark.png, shark.json, city-large.png, street.png", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, derek2.json, derek2.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, street.png", function() {
     Q.compileSheets("derek2.png", "derek2.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
