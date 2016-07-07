@@ -386,7 +386,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, blue.png, derek2.json, derek2.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, street.png", function() {
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, derek2.json, derek2.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, street.png", function() {
     Q.compileSheets("derek2.png", "derek2.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
