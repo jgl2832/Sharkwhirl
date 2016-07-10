@@ -34,8 +34,8 @@ Q.Sprite.extend("Player",{
   init: function(p) {
 
     this._super(p,{
-      sheet: "derek2",
-      sprite: "derek2",
+      sheet: "dude",
+      sprite: "dude",
       scale: 3,
       collisionMask: SPRITE_BOX, 
       x: -700,
@@ -396,16 +396,16 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, derek2.json, derek2.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png", function() {
-    Q.compileSheets("derek2.png", "derek2.json");
+Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, dude.json, dude.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png", function() {
+    Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
-    Q.animations("derek2", {
+    Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/7, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false},
       stand_right: {frames: [2], rate: 1/20, flip: false},
-      duck_right: {frames:[8], rate: 1/20, flip: false},
-      explode: {frames:[9], rate: 1/20, flip: false},
+      duck_right: {frames:[8,9], rate: 1/5, flip: false},
+      explode: {frames:[11], rate: 1/20, flip: false},
     });
     Q.animations("shark", {
       swim_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
