@@ -259,35 +259,46 @@ Q.Repeater.extend("BackgroundFloor",{
   }
 });
 
-Q.Sprite.extend("OpeningText", {
+Q.Sprite.extend("Logo", {
   init: function(p) {
     this._super(p, {
-      x: Q.width/2 - 50,
-      y: Q.height/2,
-      type: Q.SPRITE_NONE, 
-      asset: "SHARKWHIRL.png"
+      x: Q.width/2,
+      y: Q.height/2 - 50,
+      type: Q.SPRITE_NONE,
+      asset: "logo.png"
     });
   }
 });
 
-Q.Sprite.extend("JumpText", {
+Q.Sprite.extend("Jump", {
   init: function(p) {
     this._super(p, {
-      x: 1000,
-      y: Q.height/2,
+      x: Q.width/2,
+      y: Q.height/2 - 50,
       type: Q.SPRITE_NONE, 
-      asset: "JUMP.png"
+      asset: "jump.png"
     });
   }
 });
 
-Q.Sprite.extend("DuckText", {
+Q.Sprite.extend("Duck", {
   init: function(p) {
     this._super(p, {
-      x: 1500,
-      y: Q.height/2,
+      x: Q.width/2,
+      y: Q.height/2 - 50,
       type: Q.SPRITE_NONE, 
-      asset: "DUCK.png"
+      asset: "duck.png"
+    });
+  }
+});
+
+Q.Sprite.extend("Cones", {
+  init: function(p) {
+    this._super(p, {
+      x: Q.width/2,
+      y: Q.height/2 - 50,
+      type: Q.SPRITE_NONE, 
+      asset: "cones.png"
     });
   }
 });
@@ -327,9 +338,7 @@ Q.scene("level1",function(stage) {
 
   stage.insert(new Q.BackgroundFloor());
 
-  stage.insert(new Q.OpeningText());
-  stage.insert(new Q.JumpText());
-  stage.insert(new Q.DuckText());
+  //stage.insert(new Q.DuckText());
 
   var thrower = stage.insert(new Q.Thrower());
   var player = new Q.Player();
@@ -338,13 +347,12 @@ Q.scene("level1",function(stage) {
   stage.viewport.offsetX = -275;
   stage.viewport.centerOn(player.p.x, 400 );
 
+
   // SCRIPT
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
     switch(currTime) {
-      case 5: // show instructions
-        break;
-      case 10: // enemys start TODO can we do something on a half strike?
+      case 11: // enemys start TODO can we do something on a half strike?
         Q.state.set("throwPigs", true);
         break;
       case 25:
@@ -352,26 +360,6 @@ Q.scene("level1",function(stage) {
         thrower.p.launch = 0;
         Q.state.set("nextThrowShark", true);
         Q.state.set("throwSharks", true);
-        break;
-      case 35: // increase number and variety of obstacles
-        break;
-      case 46: // Add a new type of obstacle, speed up a little bit
-        //TODO
-        break;
-      case 56: // Stop obstacles, background changes color to make it more ominous
-        //TODO
-        break;
-      case 63: // Right on the two musical “hits” (approx 1:03.5 and 1:05), holes in the ground open up, or some kind of new obstacle that appears suddenly and has to be avoided immediately
-        //TODO
-        break;
-      case 66: // Speeds up, obstacles come back, maybe with some new ones
-        //TODO
-        break;
-      case 67: // 1:07.5 - Speeds up more, background gets crazy (flashing? Rainbow?)
-        // TODO (combine top two?)
-        break;
-      case 98: //1:38 - character gets to the end, everything is ok again!
-        // TODO
         break;
     }
   });
@@ -383,6 +371,61 @@ Q.scene('hud',function(stage) {
   var container = stage.insert(new Q.UI.Container({x: 50, y: 0 }));
 
   var label = container.insert(new Q.Timer());
+ 
+  var logo = new Q.Logo();
+  logo.hide();
+  stage.insert(logo);
+
+  var jump = new Q.Jump();
+  jump.hide();
+  stage.insert(jump);
+  
+  var duck = new Q.Duck();
+  duck.hide();
+  stage.insert(duck);
+  
+  var cones = new Q.Cones();
+  cones.hide();
+  stage.insert(cones);
+
+  // HUD loop
+  Q.state.on("change.time",function() {
+    var currTime = Q.state.get("time");
+    switch(currTime) {
+      case 3:
+        // show logo
+        logo.show();
+        break;
+      case 5:
+        // stop showing logo
+        logo.hide();
+        break;
+      case 7:
+        // show duck instructions
+        duck.show();
+        break;
+      case 9:
+        // hide duck instructions
+        duck.hide();
+        break;
+      case 10:
+        // show jump instructions
+        jump.show();
+        break;
+      case 12:
+        // hide jump instructions
+        jump.hide();
+        break;
+      case 15:
+        // show cones instructions
+        cones.show();
+        break;
+      case 18:
+        // hide cones instructions
+        cones.hide();
+        break;
+    }
+  });
 
   container.fit(20);
 });
@@ -396,7 +439,7 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("SHARKWHIRL.png, JUMP.png, DUCK.png, SHARKWHIRL.mp3, dude.json, dude.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png", function() {
+Q.load("logo.png, jump.png, duck.png, cones.png, SHARKWHIRL.mp3, dude.json, dude.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png", function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
