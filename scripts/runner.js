@@ -29,6 +29,15 @@ var SPRITE_BOX = 1;
 
 Q.gravityY = 1750;
 
+
+var isEnemy = function(ob) {
+  return ob.isA("Shark") || ob.isA("Pig");
+};
+
+var isPlatform = function(ob) {
+  return ob.isA("Platform");
+}
+
 Q.Sprite.extend("Player",{
 
   init: function(p) {
@@ -48,13 +57,20 @@ Q.Sprite.extend("Player",{
     });
 
     this.p.points = this.p.standingPoints;
-    this.on("bump.left", this, "die");
-    this.on("bump.right", this, "die");
-    this.on("bump.top", this, "die");
+    this.on("bump.left", this, "bumpAction");
+    this.on("bump.right", this, "bumpAction");
+    this.on("bump.top", this, "bumpAction");
     this.on("bump.bottom", this, "stomp");
 
     this.add("2d, animation");
     this.play("stand_right");
+  },
+
+  bumpAction: function(coll) {
+    if(isEnemy(coll.obj)) {
+      alert("death!");
+      this.die();
+    }
   },
 
   die: function() {
@@ -65,9 +81,11 @@ Q.Sprite.extend("Player",{
   },
 
   stomp: function(coll) {
-    if(coll.obj.isA("Shark") || coll.obj.isA("Pig")) {
+    if(isEnemy(coll.obj)) {
       coll.obj.destroy();
       this.p.vy = -700; // make the player jump
+    } else if (isPlatform(coll.obj)) {
+      this.p.landed = 1;
     }
   },
 
@@ -77,16 +95,18 @@ Q.Sprite.extend("Player",{
 
     this.p.vx += (this.p.speed - this.p.vx)/4;
 
+
     if(this.p.y > 555) {
       this.p.y = 555;
       this.p.landed = 1;
       this.p.vy = 0;
-    } else {
+    } else if (this.p.landed == 0) {
       this.p.landed = 0;
     }
 
     if(Q.state.get("moving") && Q.inputs['up'] && this.p.landed > 0) {
       this.p.vy = this.p.jump;
+      this.p.landed = 0;
     } 
 
     this.p.points = this.p.standingPoints;
@@ -352,8 +372,6 @@ Q.scene("level1",function(stage) {
 
   stage.insert(new Q.BackgroundFloor());
 
-  //stage.insert(new Q.DuckText());
-
   var thrower = stage.insert(new Q.Thrower());
   var player = new Q.Player();
   stage.insert(player);
@@ -361,7 +379,6 @@ Q.scene("level1",function(stage) {
   stage.viewport.offsetX = -275;
   stage.viewport.centerOn(player.p.x, 400 );
 
-  // TODO put in right place
   stage.insert(new Q.Platform());
 
   // SCRIPT
