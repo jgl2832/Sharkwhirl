@@ -429,7 +429,7 @@ Q.scene('hud',function(stage) {
         // show logo
         logo.show();
         break;
-      case 5:
+      case 6:
         // stop showing logo
         logo.hide();
         break;
@@ -445,7 +445,7 @@ Q.scene('hud',function(stage) {
         // show jump instructions
         jump.show();
         break;
-      case 12:
+      case 13:
         // hide jump instructions
         jump.hide();
         break;
@@ -453,7 +453,7 @@ Q.scene('hud',function(stage) {
         // show cones instructions
         cones.show();
         break;
-      case 18:
+      case 19:
         // hide cones instructions
         cones.hide();
         break;
