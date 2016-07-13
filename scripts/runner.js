@@ -259,6 +259,20 @@ Q.Repeater.extend("BackgroundFloor",{
   }
 });
 
+Q.Sprite.extend("Platform", {
+  init: function(p) {
+    var player = Q("Player").first();
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 450,
+      scale: 5.0,
+      type: SPRITE_BOX,
+      sheet: "platform",
+      sprite: "platform",
+    });
+  }
+});
+
 Q.Sprite.extend("Logo", {
   init: function(p) {
     this._super(p, {
@@ -347,6 +361,8 @@ Q.scene("level1",function(stage) {
   stage.viewport.offsetX = -275;
   stage.viewport.centerOn(player.p.x, 400 );
 
+  // TODO put in right place
+  stage.insert(new Q.Platform());
 
   // SCRIPT
   Q.state.on("change.time",function() {
@@ -439,10 +455,14 @@ var stageGame = function() {
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("logo.png, jump.png, duck.png, cones.png, SHARKWHIRL.mp3, dude.json, dude.png, pig.png, pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png", function() {
+Q.load("logo.png, jump.png, duck.png, cones.png, SHARKWHIRL.mp3, dude.json, dude.png, pig.png," +
+       " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
+       " platform.png, platform.json",
+  function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
+    Q.compileSheets("platform.png", "platform.json");
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false},
