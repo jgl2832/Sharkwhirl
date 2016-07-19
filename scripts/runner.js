@@ -14,7 +14,7 @@ window.addEventListener("load",function() {
 // better collision detection with the sharks
 // training walls
 
-var Q = window.Q = Quintus({ audioSupported: ['mp3']})
+var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
         .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup({ width: 800, height: 600, scaleToFit: true })
         .controls().touch()
@@ -491,12 +491,12 @@ var stageGame = function() {
     Q.audio.stop();
     Q.clearStages();
     Q.state.set("paused", false);
-    Q.audio.play('SHARKWHIRL.mp3');
+    Q.audio.play('sharkwhirl-new.mp3');
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
 };
   
-Q.load("logo.png, jump.png, duck.png, cones.png, SHARKWHIRL.mp3, dude.json, dude.png, pig.png," +
+Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
        " platform.png, platform.json",
   function() {
