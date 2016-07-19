@@ -68,7 +68,6 @@ Q.Sprite.extend("Player",{
 
   bumpAction: function(coll) {
     if(isEnemy(coll.obj)) {
-      alert("death!");
       this.die();
     }
   },
@@ -201,6 +200,23 @@ Q.Sprite.extend("Shark",{
 
 });
 
+Q.GameObject.extend("PlatformThrower", {
+  init: function() {
+    this.p = {
+      shouldLaunch: 0
+    }
+  },
+  update: function(dt) {
+    if ( this.p.shouldLaunch > 0 ) {
+      this.stage.insert(new Q.Platform());
+      this.p.shouldLaunch = 0;
+    }
+  },
+  launch: function() {
+    this.p.shouldLaunch = 1;
+  }
+});
+
 Q.GameObject.extend("Thrower",{
   init: function() {
     this.p = {
@@ -251,7 +267,6 @@ Q.Repeater.extend("BackgroundWall",{
       speedX: 1.00,
       y: 47.5
     });
-    //alert(this.p.w);
   },
   update: function(dt) {
     //this.p.speedX += dt;
@@ -373,18 +388,27 @@ Q.scene("level1",function(stage) {
   stage.insert(new Q.BackgroundFloor());
 
   var thrower = stage.insert(new Q.Thrower());
+  var platformThrower = stage.insert(new Q.PlatformThrower());
+
   var player = new Q.Player();
   stage.insert(player);
   stage.add("viewport").follow(player, {x: true, y: false});
   stage.viewport.offsetX = -275;
   stage.viewport.centerOn(player.p.x, 400 );
 
-  stage.insert(new Q.Platform());
-
   // SCRIPT
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
     switch(currTime) {
+      case 2:
+        platformThrower.launch();
+        break;
+      case 3:
+        platformThrower.launch();
+        break;
+      case 4:
+        platformThrower.launch();
+        break;
       case 11: // enemys start TODO can we do something on a half strike?
         Q.state.set("throwPigs", true);
         break;
