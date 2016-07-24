@@ -397,12 +397,15 @@ Q.Sprite.extend("Cones", {
 
 Q.UI.Text.extend("Timer",{
   init: function(p) {
+    // TODO debug stuff - should probably remove afterwards
+    var startParam = parseInt(getParameterByName("startAt"));
+    var startTime = startParam && startParam != NaN ? startParam : 0;
     this._super(p, {
       x:200,
       y: 20,
       label: "0",
       color: "white",
-      counter: 0
+      counter: startTime
     });
 
   },
