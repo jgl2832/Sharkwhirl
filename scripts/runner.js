@@ -88,6 +88,8 @@ Q.Sprite.extend("Player",{
       this.p.vy = -700; // make the player jump
     } else if (isPlatform(coll.obj)) {
       this.p.landed = 1;
+    } else {
+      this.die(coll);
     }
   },
 
@@ -169,10 +171,10 @@ Q.Sprite.extend("Pig",{
 });
 
 Q.Sprite.extend("ConeBomb", {
-  init: function(xStart) {
+  init: function(xStart, yStart) {
     this._super({
       x: xStart,
-      y: 565,
+      y: yStart,
       scale: 1.0,
       type: SPRITE_BOX,
       points: [ [-7,-26], [-36, /**/36], [28, /**/36], [3, -26] ],
@@ -240,21 +242,33 @@ Q.GameObject.extend("PlatformThrower", {
     var player = Q("Player").first();
     if ( this.p.toLaunch.length > 0 ) {
       var data = this.p.toLaunch.shift();
-      if ( data.platform ) {
-        this.stage.insert(new Q.Platform());
+      var baseDist = player.p.x + Q.width + 30;
+      if ( data.platformWidth > 0 ) {
+        this.stage.insert(new Q.Platform(data.platformWidth));
       }
-      if ( data.cones > 0 ) {
-        var baseDist = player.p.x + Q.width - 50;
-        this.stage.insert(new Q.ConeBomb(baseDist));
-        this.stage.insert(new Q.ConeBomb(baseDist + 100));
-        this.stage.insert(new Q.ConeBomb(baseDist + 200));
+      if ( data.bottomConeArray.length > 0 ) {
+        for (i = 0; i < data.bottomConeArray.length; i++) {
+          if ( data.bottomConeArray[i] > 0 ) {
+            var dist = baseDist + (i * 100); 
+            this.stage.insert(new Q.ConeBomb(dist, 565));
+          }
+        }
+      }
+      if ( data.topConeArray.length > 0 ) {
+        for (i = 0; i < data.topConeArray.length; i++) {
+          if ( data.topConeArray[i] > 0 ) {
+            var dist = baseDist + (i * 100); 
+            this.stage.insert(new Q.ConeBomb(dist, 410));
+          }
+        }
       }
     }
   },
-  launch: function(includePlatform, numCones) {
+  launch: function(platformWidth, bottomConeArray, topConeArray) {
     var data = {
-      platform: includePlatform,
-      cones: numCones,
+      platformWidth: platformWidth,
+      bottomConeArray: bottomConeArray,
+      topConeArray: topConeArray,
     };
     this.p.toLaunch.push(data);
   }
@@ -338,16 +352,18 @@ Q.Repeater.extend("BackgroundFloor",{
 });
 
 Q.Sprite.extend("Platform", {
-  init: function(p) {
+  init: function(width) {
     var player = Q("Player").first();
     this._super({
-      x: player.p.x + Q.width + 50,
+      x: player.p.x + Q.width + width/2,
       y: 450,
-      scale: 5.0,
-      type: SPRITE_BOX,
-      sheet: "platform",
-      sprite: "platform",
+      w: width,
+      h: 25
     });
+  },
+  draw: function(ctx) {
+    ctx.fillStyle = "#FF0000";
+    ctx.fillRect(-this.p.cx,-this.p.cy,this.p.w,this.p.h);
   }
 });
 
@@ -449,14 +465,19 @@ Q.scene("level1",function(stage) {
       case 11: // enemys start TODO can we do something on a half strike?
         Q.state.set("throwPigs", true);
         break;
-      case 15:
-        platformThrower.launch(true, 3);
+      case 15: // small platform with 3 cones underneat
+        platformThrower.launch(250, [1,1,1], []);
         break;
-      case 25:
+      case 25: // Sharks start, things speed up
+        player.p.speed = player.p.speed * 1.25
         thrower.p.launchDelay = .75;
         thrower.p.launch = 0;
         Q.state.set("nextThrowShark", true);
         Q.state.set("throwSharks", true);
+        break;
+      case 28: // medium platform with cones underneath and one on top right
+        platformThrower.launch(460, [1,1,1,1,1], [0,0,0,1,0]);
+
         break;
     }
   });
