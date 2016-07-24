@@ -31,6 +31,9 @@ Q.gravityY = 1750;
 
 
 var isEnemy = function(ob) {
+  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb");
+};
+var isStompable = function(ob) {
   return ob.isA("Shark") || ob.isA("Pig");
 };
 
@@ -68,11 +71,11 @@ Q.Sprite.extend("Player",{
 
   bumpAction: function(coll) {
     if(isEnemy(coll.obj)) {
-      this.die();
+      this.die(coll);
     }
   },
 
-  die: function() {
+  die: function(coll) {
     this.play("explode");
     Q.stage().pause();
     Q.audio.stop();
@@ -80,7 +83,7 @@ Q.Sprite.extend("Player",{
   },
 
   stomp: function(coll) {
-    if(isEnemy(coll.obj)) {
+    if(isStompable(coll.obj)) {
       coll.obj.destroy();
       this.p.vy = -700; // make the player jump
     } else if (isPlatform(coll.obj)) {
@@ -164,6 +167,32 @@ Q.Sprite.extend("Pig",{
   
 
 });
+
+Q.Sprite.extend("ConeBomb", {
+  init: function(xStart) {
+    this._super({
+      x: xStart,
+      y: 565,
+      scale: 1.0,
+      type: SPRITE_BOX,
+      points: [ [-7,-26], [-36, /**/36], [28, /**/36], [3, -26] ],
+      sheet: "conebomb",
+      sprite: "conebomb",
+      exploded: 0,
+    });
+    this.add("animation");
+  },
+
+  step: function(dt) {
+    // explode when near/under the player
+    var player = Q("Player").first();
+
+    if (player.p.x > (this.p.x - 50) && this.p.exploded == 0) {
+      this.play("explode");
+      this.p.exploded = 1;
+    }
+  }
+});
 Q.Sprite.extend("Shark",{
   init: function() {
 
@@ -203,17 +232,31 @@ Q.Sprite.extend("Shark",{
 Q.GameObject.extend("PlatformThrower", {
   init: function() {
     this.p = {
-      shouldLaunch: 0
+      toLaunch: []
     }
   },
   update: function(dt) {
-    if ( this.p.shouldLaunch > 0 ) {
-      this.stage.insert(new Q.Platform());
-      this.p.shouldLaunch = 0;
+
+    var player = Q("Player").first();
+    if ( this.p.toLaunch.length > 0 ) {
+      var data = this.p.toLaunch.shift();
+      if ( data.platform ) {
+        this.stage.insert(new Q.Platform());
+      }
+      if ( data.cones > 0 ) {
+        var baseDist = player.p.x + Q.width - 50;
+        this.stage.insert(new Q.ConeBomb(baseDist));
+        this.stage.insert(new Q.ConeBomb(baseDist + 100));
+        this.stage.insert(new Q.ConeBomb(baseDist + 200));
+      }
     }
   },
-  launch: function() {
-    this.p.shouldLaunch = 1;
+  launch: function(includePlatform, numCones) {
+    var data = {
+      platform: includePlatform,
+      cones: numCones,
+    };
+    this.p.toLaunch.push(data);
   }
 });
 
@@ -400,17 +443,11 @@ Q.scene("level1",function(stage) {
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
     switch(currTime) {
-      case 2:
-        platformThrower.launch();
-        break;
-      case 3:
-        platformThrower.launch();
-        break;
-      case 4:
-        platformThrower.launch();
-        break;
       case 11: // enemys start TODO can we do something on a half strike?
         Q.state.set("throwPigs", true);
+        break;
+      case 15:
+        platformThrower.launch(true, 3);
         break;
       case 25:
         thrower.p.launchDelay = .75;
@@ -498,12 +535,13 @@ var stageGame = function() {
   
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
-       " platform.png, platform.json",
+       " platform.png, platform.json, conebomb.png, conebomb.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
     Q.compileSheets("platform.png", "platform.json");
+    Q.compileSheets("conebomb.png", "conebomb.json");
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false},
@@ -516,6 +554,10 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("pig", {
       walk_left: { frames: [0,1,2,3], rate: 1/5, loop: true}
+    });
+    Q.animations("conebomb", {
+      exist: { frames: [0], rate: 1, loop: true},
+      explode: { frames: [5,6,7,8], rate: 1/4, loop: false}
     });
     stageGame();
   
