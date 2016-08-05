@@ -31,10 +31,10 @@ Q.gravityY = 1750;
 
 
 var isEnemy = function(ob) {
-  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb");
+  return ob.isA("Scribblemn") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb");
 };
 var isStompable = function(ob) {
-  return ob.isA("Shark") || ob.isA("Pig");
+  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn");
 };
 
 var isPlatform = function(ob) {
@@ -195,6 +195,26 @@ Q.Sprite.extend("ConeBomb", {
     }
   }
 });
+Q.Sprite.extend("Scribblemn", {
+  init: function(player) {
+
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 565,
+      scale: 1,
+      type: SPRITE_BOX,
+      sheet: "scribblemn",
+      sprite: "scribblemn",
+      vx: 0,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("scribble");
+  },
+});
 Q.Sprite.extend("Shark",{
   init: function() {
 
@@ -229,6 +249,23 @@ Q.Sprite.extend("Shark",{
   },
   
 
+});
+
+Q.GameObject.extend("GenericLauncher", {
+  init: function() {
+    this.p = {
+      toLaunch: []
+    }
+  },
+  update: function(dt) {
+    if (this.p.toLaunch.length > 0) {
+      var thingToLaunch = this.p.toLaunch.shift();
+      this.stage.insert(thingToLaunch);
+    }
+  },
+  launchScribblemn: function(player) {
+    this.p.toLaunch.push(new Q.Scribblemn(player));
+  }
 });
 
 Q.GameObject.extend("PlatformThrower", {
@@ -451,6 +488,7 @@ Q.scene("level1",function(stage) {
 
   var thrower = stage.insert(new Q.Thrower());
   var platformThrower = stage.insert(new Q.PlatformThrower());
+  var genericLauncher = stage.insert(new Q.GenericLauncher());
 
   var player = new Q.Player();
   stage.insert(player);
@@ -477,7 +515,18 @@ Q.scene("level1",function(stage) {
         break;
       case 28: // medium platform with cones underneath and one on top right
         platformThrower.launch(460, [1,1,1,1,1], [0,0,0,1,0]);
-
+        break;
+      case 35: // some scribblemn show up
+        genericLauncher.launchScribblemn(player);
+        break;
+      case 38:
+        genericLauncher.launchScribblemn(player);
+        break;
+      case 40:
+        genericLauncher.launchScribblemn(player);
+        break;
+      case 42:
+        genericLauncher.launchScribblemn(player);
         break;
     }
   });
@@ -559,13 +608,15 @@ var stageGame = function() {
   
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
-       " platform.png, platform.json, conebomb.png, conebomb.json",
+       " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
     Q.compileSheets("pig.png", "pig.json");
     Q.compileSheets("platform.png", "platform.json");
     Q.compileSheets("conebomb.png", "conebomb.json");
+    Q.compileSheets("scribblemn.png", "scribblemn.json");
+
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
       jump_right: {frames: [4], rate: 1/20, flip: false},
@@ -582,6 +633,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.animations("conebomb", {
       exist: { frames: [0], rate: 1, loop: true},
       explode: { frames: [5,6,7,8], rate: 1/4, loop: false}
+    });
+    Q.animations("scribblemn", {
+      scribble: { frames: [ 0,1,2,3,4,5,6,7], rate: 1/5, loop: true}
     });
     stageGame();
   
