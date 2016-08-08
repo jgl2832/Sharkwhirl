@@ -31,10 +31,10 @@ Q.gravityY = 1750;
 
 
 var isEnemy = function(ob) {
-  return ob.isA("Scribblemn") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb");
+  return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb");
 };
 var isStompable = function(ob) {
-  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn");
+  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman");
 };
 
 var isPlatform = function(ob) {
@@ -215,6 +215,28 @@ Q.Sprite.extend("Scribblemn", {
     this.play("scribble");
   },
 });
+Q.Sprite.extend("Susman", {
+  init: function(player) {
+
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 565,
+      scale: .5,
+      type: SPRITE_BOX,
+      sheet: "susman",
+      sprite: "susman",
+      points: [ [-100,-200], [-100, 200], [100, 200], [100, -200] ],
+      vx: -200,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("spin_left");
+    this.p.x += this.p.vx * dt;
+  },
+});
 Q.Sprite.extend("Shark",{
   init: function() {
 
@@ -265,6 +287,9 @@ Q.GameObject.extend("GenericLauncher", {
   },
   launchScribblemn: function(player) {
     this.p.toLaunch.push(new Q.Scribblemn(player));
+  },
+  launchSusman: function(player) {
+    this.p.toLaunch.push(new Q.Susman(player));
   }
 });
 
@@ -507,7 +532,7 @@ Q.scene("level1",function(stage) {
         platformThrower.launch(250, [1,1,1], []);
         break;
       case 25: // Sharks start, things speed up
-        player.p.speed = player.p.speed * 1.25
+        player.p.speed = player.p.speed * 1.25;
         thrower.p.launchDelay = .75;
         thrower.p.launch = 0;
         Q.state.set("nextThrowShark", true);
@@ -528,6 +553,12 @@ Q.scene("level1",function(stage) {
       case 42:
         genericLauncher.launchScribblemn(player);
         break;
+      case 45: // launch susman + plus speedup
+        genericLauncher.launchSusman(player);
+        player.p.speed = player.p.speed * 1.5;
+        break;
+      case 48: // long platform
+        platformThrower.launch(2000, [],[]);
     }
   });
 });
@@ -608,7 +639,8 @@ var stageGame = function() {
   
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
-       " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json",
+       " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
+       " susman.png, susman.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -616,6 +648,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("platform.png", "platform.json");
     Q.compileSheets("conebomb.png", "conebomb.json");
     Q.compileSheets("scribblemn.png", "scribblemn.json");
+    Q.compileSheets("susman.png", "susman.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -636,6 +669,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("scribblemn", {
       scribble: { frames: [ 0,1,2,3,4,5,6,7], rate: 1/5, loop: true}
+    });
+    Q.animations("susman", {
+      spin_left: { frames: [0,1,2,3], rate: 1/5, loop: true }
     });
     stageGame();
   
