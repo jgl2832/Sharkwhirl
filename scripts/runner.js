@@ -32,7 +32,7 @@ Q.gravityY = 1750;
 
 var isEnemy = function(ob) {
   return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb")
-    || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude");
+    || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude") || ob.isA("Apple");
 };
 var isStompable = function(ob) {
   return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("MurderSg")
@@ -236,6 +236,33 @@ Q.Sprite.extend("Susman", {
     this.p.x += this.p.vx * dt;
   },
 });
+Q.Sprite.extend("Apple", {
+  init: function(player) {
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 100,
+      scale: 1.5,
+      type: SPRITE_BOX,
+      sheet: "apple",
+      sprite: "apple",
+      vx: -100,
+      vy: 0,
+      ay: 0,
+      gravity: 2.5,
+      angle: 0
+    });
+    this.add("2d, animation");
+  },
+  step: function(dt) {
+    this.play("apple_left");
+    this.p.x += this.p.vx * dt;
+    this.p.angle += 15
+    if(this.p.y > 555) {
+      this.p.y = 555;
+      this.p.vy = -1500;
+    }
+  },
+});
 Q.Sprite.extend("BassDude", {
   init: function(player) {
     this._super({
@@ -364,7 +391,10 @@ Q.GameObject.extend("GenericLauncher", {
   },
   launchBassDude: function(player) {
     this.p.toLaunch.push(new Q.BassDude(player));
-  }
+  },
+  launchApple: function(player) {
+    this.p.toLaunch.push(new Q.Apple(player));
+  },
 });
 
 Q.GameObject.extend("PlatformThrower", {
@@ -608,8 +638,10 @@ Q.scene("level1",function(stage) {
       player.p.speed = playerStartSpeed * 1.25;
     } else if ( currTime >= 45 && currTime < 55 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
-    } else if ( currTime >= 55 ) {
+    } else if ( currTime >= 55 && currTime < 63 ) {
       player.p.speed = playerStartSpeed * 1.25;
+    } else if ( currTime >= 63 ) {
+      player.p.speed = playerStartSpeed * 1.25 * 1.5;
     }
 
     switch(currTime) {
@@ -671,7 +703,23 @@ Q.scene("level1",function(stage) {
       case 53:
         genericLauncher.launchBassDude(player);
         break;
-      case 60:
+      case 55: // slow down
+        break;
+      case 63: // invert, speedup, shuriken
+        background.invert();
+        genericLauncher.launchShuriken(player, 1, 0);
+        break;
+      case 64:
+        background.invert(); //normal
+        break;
+      case 65:
+        background.invert(); // invert
+        break;
+      case 66:
+        background.invert(); // normal
+        genericLauncher.launchApple(player);
+        break;
+      case 70:
         Q.state.set("throwPigs", true);
         Q.state.set("throwSharks", true);
         break;
@@ -756,7 +804,8 @@ var stageGame = function() {
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
-       " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json",
+       " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
+       " apple.png, apple.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -768,6 +817,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("shuriken.png", "shuriken.json");
     Q.compileSheets("murdersg.png", "murdersg.json");
     Q.compileSheets("bassdude.png", "bassdude.json");
+    Q.compileSheets("apple.png", "apple.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -800,6 +850,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("bassdude", {
       bass_left: { frames: [0,1], rate: 1/5, loop: true }
+    });
+    Q.animations("apple", {
+      apple_left: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/7, loop: true }
     });
     stageGame();
   
