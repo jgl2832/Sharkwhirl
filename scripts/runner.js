@@ -31,7 +31,7 @@ Q.gravityY = 1750;
 
 
 var isEnemy = function(ob) {
-  return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb") || ob.isA("Shuriken");
+  return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb") || ob.isA("Shuriken") || ob.isA("MurderSg");
 };
 var isStompable = function(ob) {
   return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman");
@@ -237,6 +237,27 @@ Q.Sprite.extend("Susman", {
     this.p.x += this.p.vx * dt;
   },
 });
+Q.Sprite.extend("MurderSg", {
+  init: function(player) {
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 410,
+      scale: 2.0,
+      type: SPRITE_BOX,
+      sheet: "murdersg",
+      sprite: "murdersg",
+      points: [ [-32,-16], [-32, 8], [32, 8], [32, -16] ],
+      vx: -400,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("murder_left");
+    this.p.x += this.p.vx * dt;
+  },
+});
 Q.Sprite.extend("Shuriken", {
   init: function(player, offset) {
 
@@ -317,6 +338,9 @@ Q.GameObject.extend("GenericLauncher", {
     for (i=0; i < numInRow; i++ ) {
       this.p.toLaunch.push(new Q.Shuriken(player, initialOffset + i*100));
     }
+  },
+  launchMurderSg: function(player) {
+    this.p.toLaunch.push(new Q.MurderSg(player));
   }
 });
 
@@ -588,7 +612,8 @@ Q.scene("level1",function(stage) {
         platformThrower.launch(2000, [],[]);
         genericLauncher.launchShuriken(player, 37, 500);
         break;
-      case 49:
+      case 50:
+        genericLauncher.launchMurderSg(player);
         break;
     }
   });
@@ -671,7 +696,7 @@ var stageGame = function() {
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
-       " susman.png, susman.json, shuriken.png, shuriken.json",
+       " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -681,6 +706,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("scribblemn.png", "scribblemn.json");
     Q.compileSheets("susman.png", "susman.json");
     Q.compileSheets("shuriken.png", "shuriken.json");
+    Q.compileSheets("murdersg.png", "murdersg.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -707,6 +733,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("shuriken", {
       spin_left: { frames: [0,1,2,3], rate: 1/10, loop: true }
+    });
+    Q.animations("murdersg", {
+      murder_left: { frames: [0,1,2], rate: 1/5, loop: true }
     });
     stageGame();
   
