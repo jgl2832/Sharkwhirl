@@ -31,10 +31,12 @@ Q.gravityY = 1750;
 
 
 var isEnemy = function(ob) {
-  return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb") || ob.isA("Shuriken") || ob.isA("MurderSg");
+  return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb")
+    || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude");
 };
 var isStompable = function(ob) {
-  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("MurderSg");
+  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("MurderSg")
+    || ob.isA("BassDude");
 };
 
 var isPlatform = function(ob) {
@@ -234,6 +236,27 @@ Q.Sprite.extend("Susman", {
     this.p.x += this.p.vx * dt;
   },
 });
+Q.Sprite.extend("BassDude", {
+  init: function(player) {
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 565,
+      scale: 2.0,
+      type: SPRITE_BOX,
+      sheet: "bassdude",
+      sprite: "bassdude",
+      points: [ [-21,-32], [-21, 32], [21, 32], [21, -32] ],
+      vx: -500,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("bass_left");
+    this.p.x += this.p.vx * dt;
+  },
+});
 Q.Sprite.extend("MurderSg", {
   init: function(player) {
     this._super({
@@ -338,6 +361,9 @@ Q.GameObject.extend("GenericLauncher", {
   },
   launchMurderSg: function(player) {
     this.p.toLaunch.push(new Q.MurderSg(player));
+  },
+  launchBassDude: function(player) {
+    this.p.toLaunch.push(new Q.BassDude(player));
   }
 });
 
@@ -580,8 +606,10 @@ Q.scene("level1",function(stage) {
       player.p.speed = playerStartSpeed;
     } else if ( currTime >= 25 && currTime < 45 ) {
       player.p.speed = playerStartSpeed * 1.25;
-    } else if ( currTime >= 45 ) {
+    } else if ( currTime >= 45 && currTime < 55 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
+    } else if ( currTime >= 55 ) {
+      player.p.speed = playerStartSpeed * 1.25;
     }
 
     switch(currTime) {
@@ -634,11 +662,14 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchSusman(player);
         break;
       case 48: // long platform
-        platformThrower.launch(2000, [],[]);
-        genericLauncher.launchShuriken(player, 37, 500);
+        platformThrower.launch(1500, [],[]);
+        genericLauncher.launchShuriken(player, 27, 500);
         break;
       case 50:
         genericLauncher.launchMurderSg(player);
+        break;
+      case 53:
+        genericLauncher.launchBassDude(player);
         break;
       case 60:
         Q.state.set("throwPigs", true);
@@ -725,7 +756,7 @@ var stageGame = function() {
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
-       " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json",
+       " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -736,6 +767,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("susman.png", "susman.json");
     Q.compileSheets("shuriken.png", "shuriken.json");
     Q.compileSheets("murdersg.png", "murdersg.json");
+    Q.compileSheets("bassdude.png", "bassdude.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -765,6 +797,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("murdersg", {
       murder_left: { frames: [0,1,2], rate: 1/5, loop: true }
+    });
+    Q.animations("bassdude", {
+      bass_left: { frames: [0,1], rate: 1/5, loop: true }
     });
     stageGame();
   
