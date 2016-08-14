@@ -34,7 +34,7 @@ var isEnemy = function(ob) {
   return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb") || ob.isA("Shuriken") || ob.isA("MurderSg");
 };
 var isStompable = function(ob) {
-  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman");
+  return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("MurderSg");
 };
 
 var isPlatform = function(ob) {
@@ -94,9 +94,6 @@ Q.Sprite.extend("Player",{
   },
 
   step: function(dt) {
-    this.p.speed += Q.state.get("acc");
-
-
     this.p.vx += (this.p.speed - this.p.vx)/4;
 
 
@@ -551,7 +548,6 @@ Q.UI.Text.extend("Timer",{
 });
 
 Q.scene("level1",function(stage) {
-  Q.state.set("acc", 0);
   Q.state.set("throwSharks", false);
   Q.state.set("throwPigs", false);
   Q.state.set("nextThrowShark", false);
@@ -572,25 +568,55 @@ Q.scene("level1",function(stage) {
   stage.viewport.offsetX = -275;
   stage.viewport.centerOn(player.p.x, 400 );
 
+  var playerStartSpeed = player.p.speed;
+
   // SCRIPT
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
+
+    // Speed controls (so that debug mode is always going at the right speed
+    
+    if (currTime < 25) {
+      player.p.speed = playerStartSpeed;
+    } else if ( currTime >= 25 && currTime < 45 ) {
+      player.p.speed = playerStartSpeed * 1.25;
+    } else if ( currTime >= 45 ) {
+      player.p.speed = playerStartSpeed * 1.25 * 1.5;
+    }
+
     switch(currTime) {
       case 11: // enemys start TODO can we do something on a half strike?
         Q.state.set("throwPigs", true);
         break;
-      case 15: // small platform with 3 cones underneat
+      case 14:
+        Q.state.set("throwPigs", false);
+        break;
+      case 15: // small platform with 3 cones underneath
         platformThrower.launch(250, [1,1,1], []);
         break;
+      case 18:
+        Q.state.set("throwPigs", true);
+        break;
       case 25: // Sharks start, things speed up
-        player.p.speed = player.p.speed * 1.25;
         thrower.p.launchDelay = .75;
         thrower.p.launch = 0;
         Q.state.set("nextThrowShark", true);
         Q.state.set("throwSharks", true);
         break;
+      case 27:
+        Q.state.set("throwPigs", false);
+        Q.state.set("throwSharks", false);
+        break;
       case 28: // medium platform with cones underneath and one on top right
         platformThrower.launch(460, [1,1,1,1,1], [0,0,0,1,0]);
+        break;
+      case 32:
+        Q.state.set("throwPigs", true);
+        Q.state.set("throwSharks", true);
+        break;
+      case 34:
+        Q.state.set("throwPigs", false);
+        Q.state.set("throwSharks", false);
         break;
       case 35: // some scribblemn show up
         genericLauncher.launchScribblemn(player);
@@ -606,7 +632,6 @@ Q.scene("level1",function(stage) {
         break;
       case 45: // launch susman + plus speedup
         genericLauncher.launchSusman(player);
-        player.p.speed = player.p.speed * 1.5;
         break;
       case 48: // long platform
         platformThrower.launch(2000, [],[]);
@@ -614,6 +639,10 @@ Q.scene("level1",function(stage) {
         break;
       case 50:
         genericLauncher.launchMurderSg(player);
+        break;
+      case 60:
+        Q.state.set("throwPigs", true);
+        Q.state.set("throwSharks", true);
         break;
     }
   });
