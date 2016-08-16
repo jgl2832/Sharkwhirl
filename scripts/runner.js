@@ -765,7 +765,7 @@ Q.scene("level1",function(stage) {
       case 69:
         genericLauncher.launchBubbles(player);
         break;
-      case 71;
+      case 71:
         // TODO morbel
         break;
       case 73:
