@@ -32,11 +32,11 @@ Q.gravityY = 1750;
 
 var isEnemy = function(ob) {
   return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb")
-    || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude") || ob.isA("Apple");
+    || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude") || ob.isA("Apple") || ob.isA("Bubbles");
 };
 var isStompable = function(ob) {
   return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("MurderSg")
-    || ob.isA("BassDude");
+    || ob.isA("BassDude") || ob.isA("Bubbles");
 };
 
 var isPlatform = function(ob) {
@@ -264,6 +264,27 @@ Q.Sprite.extend("Apple", {
     }
   },
 });
+Q.Sprite.extend("Bubbles", {
+  init: function(player) {
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 565,
+      scale: 2.0,
+      type: SPRITE_BOX,
+      sheet: "bubbles",
+      sprite: "bubbles",
+      //points: [ [-21,-32], [-21, 32], [21, 32], [21, -32] ],
+      vx: -250,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("bubble_left");
+    this.p.x += this.p.vx * dt;
+  },
+});
 Q.Sprite.extend("BassDude", {
   init: function(player) {
     this._super({
@@ -392,6 +413,9 @@ Q.GameObject.extend("GenericLauncher", {
   },
   launchBassDude: function(player) {
     this.p.toLaunch.push(new Q.BassDude(player));
+  },
+  launchBubbles: function(player) {
+    this.p.toLaunch.push(new Q.Bubbles(player));
   },
   launchApple: function(player) {
     this.p.toLaunch.push(new Q.Apple(player));
@@ -611,6 +635,7 @@ Q.scene("level1",function(stage) {
   Q.state.set("throwPigs", false);
   Q.state.set("nextThrowShark", false);
   Q.state.set("moving", true);
+  Q.state.set("strobe", false);
 
   var background = new Q.BackgroundWall();
   stage.insert(background);
@@ -633,8 +658,14 @@ Q.scene("level1",function(stage) {
   Q.state.on("change.time",function() {
     var currTime = Q.state.get("time");
 
-    // Speed controls (so that debug mode is always going at the right speed
-    
+    // Strobe controls, so we don't have to control this so finely:
+    if (Q.state.get("strobe")) {
+      if ( (currTime * 10) % 2 == 0 ) {
+        background.invert();
+      }
+    }
+
+    // Speed controls (so that debug mode is always going at the right speed 
     if (currTime < 25) {
       player.p.speed = playerStartSpeed;
     } else if ( currTime >= 25 && currTime < 45 ) {
@@ -643,8 +674,10 @@ Q.scene("level1",function(stage) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
     } else if ( currTime >= 55 && currTime < 63 ) {
       player.p.speed = playerStartSpeed * 1.25;
-    } else if ( currTime >= 63 ) {
+    } else if ( currTime >= 63 && currTime < 66.6 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
+    } else if ( currTime >= 66.6 ) {
+      player.p.speed = playerStartSpeed * 1.25 * 1.5 * 1.1;
     }
 
     switch(currTime) {
@@ -722,7 +755,26 @@ Q.scene("level1",function(stage) {
         background.invert(); // normal
         genericLauncher.launchApple(player);
         break;
-      case 70:
+      case 66.6: // strobe every .2 seconds
+        background.invert(); // kick off strobe
+        Q.state.set("strobe", true);
+        // another speed up
+        // bubbles shows up
+        genericLauncher.launchBubbles(player);
+        break;
+      case 69:
+        genericLauncher.launchBubbles(player);
+        break;
+      case 71;
+        // TODO morbel
+        break;
+      case 73:
+        // TODO jumping man
+        break;
+      case 75:
+        genericLauncher.launchBubbles(player);
+        break;
+      case 80:
         Q.state.set("throwPigs", true);
         Q.state.set("throwSharks", true);
         break;
@@ -808,7 +860,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
-       " apple.png, apple.json",
+       " apple.png, apple.json, bubbles.png, bubbles.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -821,6 +873,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("murdersg.png", "murdersg.json");
     Q.compileSheets("bassdude.png", "bassdude.json");
     Q.compileSheets("apple.png", "apple.json");
+    Q.compileSheets("bubbles.png", "bubbles.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -856,6 +909,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("apple", {
       apple_left: { frames: [0,1,2,3,4,5,6,7,8,9,10], rate: 1/7, loop: true }
+    });
+    Q.animations("bubbles", {
+      bubble_left: { frames: [0,1,2], rate: 1/5, loop: true}
     });
     stageGame();
   
