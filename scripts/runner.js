@@ -202,6 +202,7 @@ Q.Sprite.extend("Scribblemn", {
       y: 565,
       scale: 1,
       type: SPRITE_BOX,
+      points: [ [-33.5,-37], [-33.5, /**/37], [33.5, /**/37], [33.5, -37] ],
       sheet: "scribblemn",
       sprite: "scribblemn",
       vx: 0,
