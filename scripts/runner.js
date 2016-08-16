@@ -288,7 +288,7 @@ Q.Sprite.extend("MurderSg", {
   init: function(player) {
     this._super({
       x: player.p.x + Q.width + 50,
-      y: 410,
+      y: 460,
       scale: 2.0,
       type: SPRITE_BOX,
       sheet: "murdersg",
@@ -424,7 +424,7 @@ Q.GameObject.extend("PlatformThrower", {
         for (i = 0; i < data.topConeArray.length; i++) {
           if ( data.topConeArray[i] > 0 ) {
             var dist = baseDist + (i * 100); 
-            this.stage.insert(new Q.ConeBomb(dist, 410));
+            this.stage.insert(new Q.ConeBomb(dist, 460));
           }
         }
       }
@@ -522,7 +522,7 @@ Q.Sprite.extend("Platform", {
     var player = Q("Player").first();
     this._super({
       x: player.p.x + Q.width + width/2,
-      y: 450,
+      y: 500,
       w: width,
       h: 25
     });
