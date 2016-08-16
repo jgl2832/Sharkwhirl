@@ -595,7 +595,9 @@ Q.UI.Text.extend("Timer",{
   step: function(dt) {
     if (!Q.state.get("paused")) {
       this.p.counter += dt;
-      var secondsElapsed = Math.floor(this.p.counter, -1);
+      timesTen = this.p.counter * 10;
+      var secondsElapsedTimesTen = Math.floor(timesTen, -1);
+      var secondsElapsed = secondsElapsedTimesTen/10;
       Q.state.set("time", secondsElapsed);
 
       this.p.label = "" + secondsElapsed;
@@ -706,17 +708,17 @@ Q.scene("level1",function(stage) {
         break;
       case 55: // slow down
         break;
-      case 63: // invert, speedup, shuriken
+      case 63.8: // invert, speedup, shuriken
         background.invert();
         genericLauncher.launchShuriken(player, 1, 0);
         break;
-      case 64:
+      case 64.5:
         background.invert(); //normal
         break;
-      case 65:
+      case 65.2:
         background.invert(); // invert
         break;
-      case 66:
+      case 65.9:
         background.invert(); // normal
         genericLauncher.launchApple(player);
         break;
