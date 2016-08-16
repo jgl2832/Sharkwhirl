@@ -246,7 +246,7 @@ Q.Sprite.extend("Apple", {
       type: SPRITE_BOX,
       sheet: "apple",
       sprite: "apple",
-      vx: -100,
+      vx: -140,
       vy: 0,
       ay: 0,
       gravity: 2.5,
