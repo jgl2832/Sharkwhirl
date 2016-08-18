@@ -32,11 +32,12 @@ Q.gravityY = 1750;
 
 var isEnemy = function(ob) {
   return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb")
-    || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude") || ob.isA("Apple") || ob.isA("Bubbles");
+    || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude") || ob.isA("Apple") || ob.isA("Bubbles")
+    || ob.isA("Morbel");
 };
 var isStompable = function(ob) {
   return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("MurderSg")
-    || ob.isA("BassDude") || ob.isA("Bubbles");
+    || ob.isA("BassDude") || ob.isA("Bubbles") || ob.isA("Morbel");
 };
 
 var isPlatform = function(ob) {
@@ -273,7 +274,6 @@ Q.Sprite.extend("Bubbles", {
       type: SPRITE_BOX,
       sheet: "bubbles",
       sprite: "bubbles",
-      //points: [ [-21,-32], [-21, 32], [21, 32], [21, -32] ],
       vx: -250,
       vy: 0,
       ay: 0
@@ -282,6 +282,26 @@ Q.Sprite.extend("Bubbles", {
   },
   step: function(dt) {
     this.play("bubble_left");
+    this.p.x += this.p.vx * dt;
+  },
+});
+Q.Sprite.extend("Morbel", {
+  init: function(player) {
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 565,
+      scale: 2.0,
+      type: SPRITE_BOX,
+      sheet: "morbel",
+      sprite: "morbel",
+      vx: -250,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("morb_left");
     this.p.x += this.p.vx * dt;
   },
 });
@@ -419,6 +439,9 @@ Q.GameObject.extend("GenericLauncher", {
   },
   launchApple: function(player) {
     this.p.toLaunch.push(new Q.Apple(player));
+  },
+  launchMorbel: function(player) {
+    this.p.toLaunch.push(new Q.Morbel(player));
   },
 });
 
@@ -766,7 +789,7 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchBubbles(player);
         break;
       case 71:
-        // TODO morbel
+        genericLauncher.launchMorbel(player);
         break;
       case 73:
         // TODO jumping man
@@ -860,7 +883,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
        " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
-       " apple.png, apple.json, bubbles.png, bubbles.json",
+       " apple.png, apple.json, bubbles.png, bubbles.json, morbel.png, morbel.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -874,6 +897,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("bassdude.png", "bassdude.json");
     Q.compileSheets("apple.png", "apple.json");
     Q.compileSheets("bubbles.png", "bubbles.json");
+    Q.compileSheets("morbel.png", "morbel.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -912,6 +936,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("bubbles", {
       bubble_left: { frames: [0,1,2], rate: 1/5, loop: true}
+    });
+    Q.animations("morbel", {
+      morb_left: { frames: [0,1], rate: 1/5, loop: true }
     });
     stageGame();
   
