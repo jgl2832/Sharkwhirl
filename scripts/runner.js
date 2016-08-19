@@ -682,7 +682,7 @@ Q.scene("level1",function(stage) {
   Q.state.set("throwPigs", false);
   Q.state.set("nextThrowShark", false);
   Q.state.set("moving", true);
-  Q.state.set("strobe", false);
+  Q.state.set("strobe", 0);
 
   var background = new Q.BackgroundWall();
   stage.insert(background);
@@ -706,10 +706,18 @@ Q.scene("level1",function(stage) {
     var currTime = Q.state.get("time");
 
     // Strobe controls, so we don't have to control this so finely:
-    if (Q.state.get("strobe")) {
-      if ( (currTime * 10) % 2 == 0 ) {
+    var strobeVal = Q.state.get("strobe");
+    switch(strobeVal) {
+      case 0:
+        break;
+      case 1:
+        if ( (currTime * 10) % 2 == 0 ) {
+          background.invert();
+        }
+        break;
+      case 2:
         background.invert();
-      }
+        break;
     }
 
     // Speed controls (so that debug mode is always going at the right speed 
@@ -804,12 +812,13 @@ Q.scene("level1",function(stage) {
         break;
       case 66.6: // strobe every .2 seconds
         background.invert(); // kick off strobe
-        Q.state.set("strobe", true);
+        Q.state.set("strobe", 1); // level 1 strobing
         // another speed up
         // bubbles shows up
         genericLauncher.launchBubbles(player);
         break;
       case 69:
+        Q.state.set("strobe", 2);
         genericLauncher.launchBubbles(player);
         break;
       case 71:
@@ -821,7 +830,37 @@ Q.scene("level1",function(stage) {
       case 75:
         genericLauncher.launchBubbles(player);
         break;
-      case 80:
+      case 77.5:
+        Q.state.set("strobe", 2); // TODO sync up timing better
+        // TODO after sync up - more speed
+        // TODO 3x smacks
+        break;
+      case 82:
+        // TODO torb jr
+        break;
+      case 84:
+        genericLauncher.launchBassDude(player); // TODO slower?
+        break;
+      case 86:
+        // TODO nose
+        break;
+      case 88:
+        // TODO 3x jumping man timed so if you land on one you land on all three
+        genericLauncher.launchJumpingMan(player);
+        break;
+      case 91:
+        // TODO
+        // short and long platforms with cones, can jump from one to the other
+        // flash faster, w/ black and white?
+        // more speedup
+        break;
+      case 93:
+        // TODO murder SGs on long platform, apple that always misses you
+        break;
+      case 95:
+        // TODO morbel + torb jr
+        break;
+      case 100:
         Q.state.set("throwPigs", true);
         Q.state.set("throwSharks", true);
         break;
