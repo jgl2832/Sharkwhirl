@@ -287,9 +287,9 @@ Q.Sprite.extend("Bubbles", {
   },
 });
 Q.Sprite.extend("JumpingMan", {
-  init: function(player) {
+  init: function(player, offset) {
     this._super({
-      x: player.p.x + Q.width + 50,
+      x: player.p.x + Q.width + 50 + offset,
       y: 525,
       scale: 2,
       type: SPRITE_BOX,
@@ -354,6 +354,7 @@ Q.Sprite.extend("Noze", {
       x: player.p.x + Q.width + 50,
       y: 560,
       scale: 2.5,
+      points: [ [-23,-51], [-23, 51], [23, 51], [23, -51] ],
       type: SPRITE_BOX,
       sheet: "noze",
       sprite: "noze",
@@ -526,8 +527,8 @@ Q.GameObject.extend("GenericLauncher", {
   launchMorbel: function(player, speed) {
     this.p.toLaunch.push(new Q.Morbel(player, speed));
   },
-  launchJumpingMan: function(player) {
-    this.p.toLaunch.push(new Q.JumpingMan(player));
+  launchJumpingMan: function(player, offset) {
+    this.p.toLaunch.push(new Q.JumpingMan(player, offset));
   },
   launchSmack: function(player, offset) {
     this.p.toLaunch.push(new Q.Smack(player, offset));
@@ -896,7 +897,7 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchMorbel(player, -250);
         break;
       case 73:
-        genericLauncher.launchJumpingMan(player);
+        genericLauncher.launchJumpingMan(player, 0);
         break;
       case 75:
         genericLauncher.launchBubbles(player);
@@ -919,7 +920,9 @@ Q.scene("level1",function(stage) {
         break;
       case 88:
         // TODO 3x jumping man timed so if you land on one you land on all three
-        genericLauncher.launchJumpingMan(player);
+        genericLauncher.launchJumpingMan(player, 0);
+        genericLauncher.launchJumpingMan(player, 350);
+        genericLauncher.launchJumpingMan(player, 650);
         break;
       case 91:
         // TODO
