@@ -33,12 +33,12 @@ Q.gravityY = 1750;
 var isEnemy = function(ob) {
   return ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("Shark") || ob.isA("Pig") || ob.isA("ConeBomb")
     || ob.isA("Shuriken") || ob.isA("MurderSg") || ob.isA("BassDude") || ob.isA("Apple") || ob.isA("Bubbles")
-    || ob.isA("Morbel") || ob.isA("JumpingMan") || ob.isA("Smack") || ob.isA("TorbJr");
+    || ob.isA("Morbel") || ob.isA("JumpingMan") || ob.isA("Smack") || ob.isA("TorbJr") || ob.isA("Noze");
 };
 var isStompable = function(ob) {
   return ob.isA("Shark") || ob.isA("Pig") || ob.isA("Scribblemn") || ob.isA("Susman") || ob.isA("MurderSg")
     || ob.isA("BassDude") || ob.isA("Bubbles") || ob.isA("Morbel") || ob.isA("JumpingMan") || ob.isA("Smack")
-    || ob.isA("TorbJr");
+    || ob.isA("TorbJr") || ob.isA("Noze");
 };
 
 var isPlatform = function(ob) {
@@ -348,6 +348,26 @@ Q.Sprite.extend("TorbJr", {
     this.p.x += this.p.vx * dt;
   },
 });
+Q.Sprite.extend("Noze", {
+  init: function(player) {
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 560,
+      scale: 2.5,
+      type: SPRITE_BOX,
+      sheet: "noze",
+      sprite: "noze",
+      vx: -200,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("noze_left");
+    this.p.x += this.p.vx * dt;
+  },
+});
 Q.Sprite.extend("Morbel", {
   init: function(player, speed) {
     this._super({
@@ -514,6 +534,9 @@ Q.GameObject.extend("GenericLauncher", {
   },
   launchTorbJr: function(player) {
     this.p.toLaunch.push(new Q.TorbJr(player));
+  },
+  launchNoze: function(player) {
+    this.p.toLaunch.push(new Q.Noze(player));
   },
 });
 
@@ -892,7 +915,7 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchBassDude(player);
         break;
       case 86:
-        // TODO nose
+        genericLauncher.launchNoze(player);
         break;
       case 88:
         // TODO 3x jumping man timed so if you land on one you land on all three
@@ -999,7 +1022,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
        " apple.png, apple.json, bubbles.png, bubbles.json, morbel.png, morbel.json, jumpingman.png, jumpingman.json," +
-       " smack.png, smack.json, torbjr.png, torbjr.json",
+       " smack.png, smack.json, torbjr.png, torbjr.json, noze.png, noze.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -1017,6 +1040,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("jumpingman.png", "jumpingman.json");
     Q.compileSheets("smack.png", "smack.json");
     Q.compileSheets("torbjr.png", "torbjr.json");
+    Q.compileSheets("noze.png", "noze.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -1067,6 +1091,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("torbjr", {
       torb_left: { frames: [0,1], rate: 1/5, loop: true }
+    });
+    Q.animations("noze", {
+      noze_left: { frames: [0,1,2,3,4,5,6,7,8,9], rate: 1/5, loop: true }
     });
     stageGame();
   
