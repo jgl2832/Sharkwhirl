@@ -938,8 +938,15 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchTorbJr(player);
         break;
       case 100:
-        Q.state.set("throwPigs", true);
-        Q.state.set("throwSharks", true);
+        // end?
+        // yeah, i think the game could end with the background going back to normal, "APJ" shows up like a stationary enemy would, then the game stops scrolling with APJ on the right side of the screen and the main character on the left (with the main character no longer moving his legs) and maybe a bunch of the "Cone up" sprites raining down from the sky
+        // and just sits there 'forever' with that and cones raining down?
+        // with no sound playing
+        // and i think we'll want to somehow have a link to a free download of the song pop up either in the game or outside of it, or it automatically redirects you after a few seconds to a page with the download
+        // maybe it says "You Won!" or "You're the Best!" on a big banner or something also
+        //
+        //Q.state.set("throwPigs", true);
+        //Q.state.set("throwSharks", true);
         break;
     }
     // TODO bigger apple, murdersg, bassdude
