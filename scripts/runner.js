@@ -316,7 +316,7 @@ Q.Sprite.extend("Smack", {
       points: [ [-40,-45], [-40, 58], [50, 58], [50, -45] ],
       sheet: "smack",
       sprite: "smack",
-      vx: -250,
+      vx: -200,
       vy: 0,
       ay: 0
     });
