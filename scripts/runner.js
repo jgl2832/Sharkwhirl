@@ -815,7 +815,7 @@ Q.scene("level1",function(stage) {
     }
 
     switch(currTime) {
-      case 11: // enemys start TODO can we do something on a half strike?
+      case 11: // enemys start
         Q.state.set("throwPigs", true);
         break;
       case 14:
@@ -926,7 +926,6 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchNoze(player);
         break;
       case 88:
-        // TODO 3x jumping man timed so if you land on one you land on all three
         genericLauncher.launchJumpingMan(player, 0);
         genericLauncher.launchJumpingMan(player, 350);
         genericLauncher.launchJumpingMan(player, 650);
@@ -941,7 +940,6 @@ Q.scene("level1",function(stage) {
       case 93:
         genericLauncher.launchMurderSg(player, 0);
         genericLauncher.launchMurderSg(player, 300);
-        // TODO murder SGs on long platform, apple that always misses you
         break;
       case 94: 
         genericLauncher.launchApple(player);
