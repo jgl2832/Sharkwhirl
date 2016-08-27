@@ -255,6 +255,7 @@ Q.Sprite.extend("Apple", {
       angle: 0
     });
     this.add("2d, animation");
+    this.on("bump.bottom", this, "bounce");
   },
   step: function(dt) {
     this.play("apple_left");
@@ -263,6 +264,11 @@ Q.Sprite.extend("Apple", {
     if(this.p.y > 555) {
       this.p.y = 555;
       this.p.vy = -1500;
+    }
+  },
+  bounce: function(coll) {
+    if (isPlatform(coll.obj)) {
+      this.p.vy = -1500; // make the apple bounce
     }
   },
 });
@@ -411,9 +417,9 @@ Q.Sprite.extend("BassDude", {
   },
 });
 Q.Sprite.extend("MurderSg", {
-  init: function(player) {
+  init: function(player, initialOffset) {
     this._super({
-      x: player.p.x + Q.width + 50,
+      x: player.p.x + Q.width + 50 + initialOffset,
       y: 460,
       scale: 2.0,
       type: SPRITE_BOX,
@@ -512,8 +518,8 @@ Q.GameObject.extend("GenericLauncher", {
       this.p.toLaunch.push(new Q.Shuriken(player, initialOffset + i*100));
     }
   },
-  launchMurderSg: function(player) {
-    this.p.toLaunch.push(new Q.MurderSg(player));
+  launchMurderSg: function(player, initialOffset) {
+    this.p.toLaunch.push(new Q.MurderSg(player, initialOffset));
   },
   launchBassDude: function(player) {
     this.p.toLaunch.push(new Q.BassDude(player));
@@ -552,9 +558,9 @@ Q.GameObject.extend("PlatformThrower", {
     var player = Q("Player").first();
     if ( this.p.toLaunch.length > 0 ) {
       var data = this.p.toLaunch.shift();
-      var baseDist = player.p.x + Q.width + 30;
+      var baseDist = player.p.x + Q.width + 30 + data.initialOffset;
       if ( data.platformWidth > 0 ) {
-        this.stage.insert(new Q.Platform(data.platformWidth));
+        this.stage.insert(new Q.Platform(data.platformWidth, data.initialOffset));
       }
       if ( data.bottomConeArray.length > 0 ) {
         for (i = 0; i < data.bottomConeArray.length; i++) {
@@ -574,11 +580,12 @@ Q.GameObject.extend("PlatformThrower", {
       }
     }
   },
-  launch: function(platformWidth, bottomConeArray, topConeArray) {
+  launch: function(platformWidth, bottomConeArray, topConeArray, initialOffset) {
     var data = {
       platformWidth: platformWidth,
       bottomConeArray: bottomConeArray,
       topConeArray: topConeArray,
+      initialOffset: initialOffset
     };
     this.p.toLaunch.push(data);
   }
@@ -662,10 +669,10 @@ Q.Repeater.extend("BackgroundFloor",{
 });
 
 Q.Sprite.extend("Platform", {
-  init: function(width) {
+  init: function(width, initialOffset) {
     var player = Q("Player").first();
     this._super({
-      x: player.p.x + Q.width + width/2,
+      x: player.p.x + Q.width + width/2 + initialOffset,
       y: 500,
       w: width,
       h: 25
@@ -815,7 +822,7 @@ Q.scene("level1",function(stage) {
         Q.state.set("throwPigs", false);
         break;
       case 15: // small platform with 3 cones underneath
-        platformThrower.launch(250, [1,1,1], []);
+        platformThrower.launch(250, [1,1,1], [], 0);
         break;
       case 18:
         Q.state.set("throwPigs", true);
@@ -831,7 +838,7 @@ Q.scene("level1",function(stage) {
         Q.state.set("throwSharks", false);
         break;
       case 28: // medium platform with cones underneath and one on top right
-        platformThrower.launch(460, [1,1,1,1,1], [0,0,0,1,0]);
+        platformThrower.launch(460, [1,1,1,1,1], [0,0,0,1,0], 0);
         break;
       case 32:
         Q.state.set("throwPigs", true);
@@ -857,11 +864,11 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchSusman(player);
         break;
       case 48: // long platform
-        platformThrower.launch(1500, [],[]);
+        platformThrower.launch(1500, [],[], 0);
         genericLauncher.launchShuriken(player, 27, 500);
         break;
       case 50:
-        genericLauncher.launchMurderSg(player);
+        genericLauncher.launchMurderSg(player, 0);
         break;
       case 53:
         genericLauncher.launchBassDude(player);
@@ -925,13 +932,19 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchJumpingMan(player, 650);
         break;
       case 91:
+        platformThrower.launch(350, [1,1,1,1,1,1,1], [0,0,0,0,0,0,0], 0);
+        platformThrower.launch(1200, [1,1,1,1,1,1,1,1,1,1,1,1], [0,0,0,0,0,0,0,0,0,0,0,0], 665);
         // TODO
-        // short and long platforms with cones, can jump from one to the other
         // flash faster, w/ black and white?
         // more speedup
         break;
       case 93:
+        genericLauncher.launchMurderSg(player, 0);
+        genericLauncher.launchMurderSg(player, 300);
         // TODO murder SGs on long platform, apple that always misses you
+        break;
+      case 94: 
+        genericLauncher.launchApple(player);
         break;
       case 96:
         genericLauncher.launchMorbel(player, 0);
