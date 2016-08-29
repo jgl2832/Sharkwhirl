@@ -354,6 +354,26 @@ Q.Sprite.extend("TorbJr", {
     this.p.x += this.p.vx * dt;
   },
 });
+Q.Sprite.extend("Apj", {
+  init: function(player) {
+    this._super({
+      x: player.p.x + Q.width + 50,
+      y: 500,
+      scale: 2,
+      type: SPRITE_BOX,
+      sheet: "apj",
+      sprite: "apj",
+      vx: 0,
+      vy: 0,
+      ay: 0
+    });
+    this.add("animation");
+  },
+  step: function(dt) {
+    this.play("stand");
+    this.p.x += this.p.vx * dt;
+  },
+});
 Q.Sprite.extend("Noze", {
   init: function(player) {
     this._super({
@@ -545,6 +565,9 @@ Q.GameObject.extend("GenericLauncher", {
   launchNoze: function(player) {
     this.p.toLaunch.push(new Q.Noze(player));
   },
+  launchApj: function(player) {
+    this.p.toLaunch.push(new Q.Apj(player));
+  }
 });
 
 Q.GameObject.extend("PlatformThrower", {
@@ -743,7 +766,7 @@ Q.UI.Text.extend("Timer",{
 
   },
   step: function(dt) {
-    if (!Q.state.get("paused")) {
+    if (!Q.state.get("paused") && Q.state.get("canPause") ) {
       this.p.counter += dt;
       timesTen = this.p.counter * 10;
       var secondsElapsedTimesTen = Math.floor(timesTen, -1);
@@ -762,6 +785,7 @@ Q.scene("level1",function(stage) {
   Q.state.set("nextThrowShark", false);
   Q.state.set("moving", true);
   Q.state.set("strobe", 0);
+  Q.state.set("canPause", true);
 
   var background = new Q.BackgroundWall();
   stage.insert(background);
@@ -810,8 +834,10 @@ Q.scene("level1",function(stage) {
       player.p.speed = playerStartSpeed * 1.25;
     } else if ( currTime >= 63 && currTime < 66.6 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
-    } else if ( currTime >= 66.6 ) {
+    } else if ( currTime >= 66.6 && currTime < 98 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5 * 1.1;
+    } else if ( currTime >= 98 ) {
+      player.p.speed = 0;
     }
 
     switch(currTime) {
@@ -948,7 +974,22 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchMorbel(player, 0);
         genericLauncher.launchTorbJr(player);
         break;
-      case 100:
+      case 97.5:
+        genericLauncher.launchApj(player);
+        break;
+      case 98:
+        Q.state.set("canPause", false);
+        // Stop movement (above)
+        Q.state.set("strobe", 0);
+        // Stop character animation
+        Q.state.set("moving", false);
+        // Sound stopped
+        Q.audio.stop();
+        // Cones 'raining from sky'
+        // 'Download the song' link
+        // You won! banner on top
+
+
         // end?
         // yeah, i think the game could end with the background going back to normal, "APJ" shows up like a stationary enemy would, then the game stops scrolling with APJ on the right side of the screen and the main character on the left (with the main character no longer moving his legs) and maybe a bunch of the "Cone up" sprites raining down from the sky
         // and just sits there 'forever' with that and cones raining down?
@@ -956,8 +997,6 @@ Q.scene("level1",function(stage) {
         // and i think we'll want to somehow have a link to a free download of the song pop up either in the game or outside of it, or it automatically redirects you after a few seconds to a page with the download
         // maybe it says "You Won!" or "You're the Best!" on a big banner or something also
         //
-        //Q.state.set("throwPigs", true);
-        //Q.state.set("throwSharks", true);
         break;
     }
     // TODO bigger apple, murdersg, bassdude
@@ -1043,7 +1082,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
        " apple.png, apple.json, bubbles.png, bubbles.json, morbel.png, morbel.json, jumpingman.png, jumpingman.json," +
-       " smack.png, smack.json, torbjr.png, torbjr.json, noze.png, noze.json",
+       " smack.png, smack.json, torbjr.png, torbjr.json, noze.png, noze.json, apj.png, apj.json",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -1062,6 +1101,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("smack.png", "smack.json");
     Q.compileSheets("torbjr.png", "torbjr.json");
     Q.compileSheets("noze.png", "noze.json");
+    Q.compileSheets("apj.png", "apj.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -1116,18 +1156,25 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.animations("noze", {
       noze_left: { frames: [0,1,2,3,4,5,6,7,8,9], rate: 1/5, loop: true }
     });
+    Q.animations("apj", {
+      stand: { frames: [0,1], rate: 3/4, loop: true }
+    });
     stageGame();
   
 });
 
 document.addEventListener("blur", function() {
-  Q.state.set("paused",true);
-  Q.stage().pause();
-  Q.audio.stop();
+  if ( Q.state.get("canPause") ) {
+    Q.state.set("paused",true);
+    Q.stage().pause();
+    Q.audio.stop();
+  }
 }, true);
 
 document.addEventListener("focus", function() {
-  stageGame();
+  if ( Q.state.get("canPause") ) {
+    stageGame();
+  }
 }, true);
 
 
