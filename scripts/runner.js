@@ -135,9 +135,8 @@ Q.Sprite.extend("Player",{
 });
 
 Q.Sprite.extend("Pig",{
-  init: function() {
+  init: function(player) {
 
-    var player = Q("Player").first();
     this._super({
       x: player.p.x + Q.width + 50,
       y: 565,
@@ -480,9 +479,7 @@ Q.Sprite.extend("Shuriken", {
   },
 });
 Q.Sprite.extend("Shark",{
-  init: function() {
-
-    var player = Q("Player").first();
+  init: function(player) {
     this._super({
       x: player.p.x + Q.width + 50,
       y: 500,
@@ -567,7 +564,14 @@ Q.GameObject.extend("GenericLauncher", {
   },
   launchApj: function(player) {
     this.p.toLaunch.push(new Q.Apj(player));
+  },
+  launchPig: function(player) {
+    this.p.toLaunch.push(new Q.Pig(player));
+  },
+  launchShark: function(player) {
+    this.p.toLaunch.push(new Q.Shark(player));
   }
+
 });
 
 Q.GameObject.extend("PlatformThrower", {
@@ -625,6 +629,8 @@ Q.GameObject.extend("Thrower",{
 
   update: function(dt) {
     var thingsToThrow = [];
+
+    var player = Q("Player").first();
     if (Q.state.get("throwSharks")) {
       thingsToThrow.push("shark");
     }
@@ -643,9 +649,9 @@ Q.GameObject.extend("Thrower",{
         }
 
         if ( thing == "shark" ) {
-          this.stage.insert(new Q.Shark());
+          this.stage.insert(new Q.Shark(player));
         } else if ( thing == "pig" ) {
-          this.stage.insert(new Q.Pig());
+          this.stage.insert(new Q.Pig(player));
         }
         this.p.launch = this.p.launchDelay + this.p.launchRandom * Math.random();
       }
@@ -844,10 +850,8 @@ Q.scene("level1",function(stage) {
       case 11: // enemys start
         Q.state.set("throwPigs", true);
         break;
-      case 14:
-        Q.state.set("throwPigs", false);
-        break;
       case 15: // small platform with 3 cones underneath
+        Q.state.set("throwPigs", false);
         platformThrower.launch(250, [1,1,1], [], 0);
         break;
       case 18:
@@ -859,11 +863,9 @@ Q.scene("level1",function(stage) {
         Q.state.set("nextThrowShark", true);
         Q.state.set("throwSharks", true);
         break;
-      case 27:
+      case 28: // medium platform with cones underneath and one on top right
         Q.state.set("throwPigs", false);
         Q.state.set("throwSharks", false);
-        break;
-      case 28: // medium platform with cones underneath and one on top right
         platformThrower.launch(460, [1,1,1,1,1], [0,0,0,1,0], 0);
         break;
       case 32:
@@ -877,13 +879,18 @@ Q.scene("level1",function(stage) {
       case 35: // some scribblemn show up
         genericLauncher.launchScribblemn(player);
         break;
+      case 37:
+        genericLauncher.launchPig(player);
+        break;
       case 38:
         genericLauncher.launchScribblemn(player);
         break;
       case 40:
+        genericLauncher.launchShark(player);
         genericLauncher.launchScribblemn(player);
         break;
       case 42:
+        genericLauncher.launchShark(player);
         genericLauncher.launchScribblemn(player);
         break;
       case 45: // launch susman + plus speedup
