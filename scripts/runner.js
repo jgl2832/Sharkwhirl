@@ -660,25 +660,26 @@ Q.GameObject.extend("Thrower",{
 
 });
 
-var bgNormal = "derek-background.png";
-var bgInverse = "derek-background-inverse.png";
 Q.Repeater.extend("BackgroundWall",{
   init: function() {
     this._super({
-      asset: bgNormal,
+      //asset: bgNormal,
+      sheet: "bg",
+      sprite: "bg",
+      frame: 0,
       repeatY: false,
       speedX: 1.00,
-      y: 47.5
+      y: 48
     });
   },
   update: function(dt) {
     //this.p.speedX += dt;
   },
   invert: function(dt) {
-    if (this.p.asset == bgNormal) {
-      this.p.asset = bgInverse;
+    if (this.p.frame == 0) {
+      this.p.frame = 1;
     } else {
-      this.p.asset = bgNormal;
+      this.p.frame = 0;
     }
   },
 });
@@ -792,6 +793,7 @@ Q.scene("level1",function(stage) {
   Q.state.set("moving", true);
   Q.state.set("strobe", 0);
   Q.state.set("canPause", true);
+  Q.state.set("frame", 0);
 
   var background = new Q.BackgroundWall();
   stage.insert(background);
@@ -1118,11 +1120,11 @@ var stageGame = function() {
 };
   
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
-       " pig.json, shark.png, shark.json, derek-background.png, derek-background-inverse.png, street.png," +
+       " pig.json, shark.png, shark.json, street.png," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
        " apple.png, apple.json, bubbles.png, bubbles.json, morbel.png, morbel.json, jumpingman.png, jumpingman.json," +
-       " smack.png, smack.json, torbjr.png, torbjr.json, noze.png, noze.json, apj.png, apj.json",
+       " smack.png, smack.json, torbjr.png, torbjr.json, noze.png, noze.json, apj.png, apj.json, bg.json, bg.png",
   function() {
     Q.compileSheets("dude.png", "dude.json");
     Q.compileSheets("shark.png","shark.json");
@@ -1142,6 +1144,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("torbjr.png", "torbjr.json");
     Q.compileSheets("noze.png", "noze.json");
     Q.compileSheets("apj.png", "apj.json");
+    Q.compileSheets("bg.png", "bg.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -1198,6 +1201,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("apj", {
       stand: { frames: [0,1], rate: 3/4, loop: true }
+    });
+    Q.animations("bg", {
+      reg: { frames: [1], rate: 1, loop: true }
     });
     stageGame();
   
