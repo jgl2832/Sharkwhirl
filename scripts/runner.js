@@ -1194,7 +1194,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
       torb_left: { frames: [0,1], rate: 1/5, loop: true }
     });
     Q.animations("noze", {
-      noze_left: { frames: [0,1,2,3,4,5,6,7,8,9], rate: 1/5, loop: true }
+      noze_left: { frames: [0,1,2,3,4,5,6,7,8,9], rate: 1/10, loop: true }
     });
     Q.animations("apj", {
       stand: { frames: [0,1], rate: 3/4, loop: true }
