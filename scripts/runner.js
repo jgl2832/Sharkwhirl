@@ -896,17 +896,29 @@ Q.scene("level1",function(stage) {
       case 45: // launch susman + plus speedup
         genericLauncher.launchSusman(player);
         break;
+      case 47:
+        genericLauncher.launchSusman(player);
+        break;
       case 48: // long platform
         platformThrower.launch(1500, [],[], 0);
         genericLauncher.launchShuriken(player, 27, 500);
         break;
+      case 49:
+        genericLauncher.launchMurderSg(player, 0);
+        break;
       case 50:
         genericLauncher.launchMurderSg(player, 0);
+        break;
+      case 52:
+        Q.state.set("throwPigs", true);
+        Q.state.set("throwSharks", true);
         break;
       case 53:
         genericLauncher.launchBassDude(player);
         break;
       case 55: // slow down
+        Q.state.set("throwPigs", false);
+        Q.state.set("throwSharks", false);
         break;
       case 63.8: // invert, speedup, shuriken
         background.invert();
@@ -929,6 +941,15 @@ Q.scene("level1",function(stage) {
         // bubbles shows up
         genericLauncher.launchBubbles(player);
         break;
+      case 67.5:
+        genericLauncher.launchPig(player);
+        break;
+      case 68.2:
+        genericLauncher.launchShark(player);
+        break;
+      case 68.4:
+        genericLauncher.launchShark(player);
+        break;
       case 69:
         Q.state.set("strobe", 2);
         genericLauncher.launchBubbles(player);
@@ -936,11 +957,20 @@ Q.scene("level1",function(stage) {
       case 71:
         genericLauncher.launchMorbel(player, -250);
         break;
+      case 72:
+        genericLauncher.launchShark(player);
+        break;
       case 73:
         genericLauncher.launchJumpingMan(player, 0);
         break;
+      case 74:
+        genericLauncher.launchShark(player);
+        break;
       case 75:
         genericLauncher.launchBubbles(player);
+        break;
+      case 76:
+        genericLauncher.launchSusman(player);
         break;
       case 77.5:
         Q.state.set("strobe", 2); // TODO sync up timing better and moar strobe
@@ -951,6 +981,9 @@ Q.scene("level1",function(stage) {
         break;
       case 82:
         genericLauncher.launchTorbJr(player);
+        break;
+      case 83:
+        genericLauncher.launchShark(player);
         break;
       case 84:
         genericLauncher.launchBassDude(player);
