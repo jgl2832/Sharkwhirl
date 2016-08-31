@@ -1021,6 +1021,12 @@ Q.scene("level1",function(stage) {
       case 94: 
         genericLauncher.launchApple(player);
         break;
+      case 94.7:
+        genericLauncher.launchPig(player);
+        break;
+      case 95.2:
+        genericLauncher.launchShark(player);
+        break;
       case 96:
         genericLauncher.launchMorbel(player, 0);
         genericLauncher.launchTorbJr(player);
