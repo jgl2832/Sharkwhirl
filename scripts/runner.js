@@ -334,7 +334,7 @@ Q.Sprite.extend("Smack", {
   },
 });
 Q.Sprite.extend("TorbJr", {
-  init: function(player) {
+  init: function(player, speed) {
     this._super({
       x: player.p.x + Q.width + 50,
       y: 560,
@@ -342,7 +342,7 @@ Q.Sprite.extend("TorbJr", {
       type: SPRITE_BOX,
       sheet: "torbjr",
       sprite: "torbjr",
-      vx: -200,
+      vx: speed,
       vy: 0,
       ay: 0
     });
@@ -556,8 +556,8 @@ Q.GameObject.extend("GenericLauncher", {
   launchSmack: function(player, offset) {
     this.p.toLaunch.push(new Q.Smack(player, offset));
   },
-  launchTorbJr: function(player) {
-    this.p.toLaunch.push(new Q.TorbJr(player));
+  launchTorbJr: function(player, speed) {
+    this.p.toLaunch.push(new Q.TorbJr(player, speed));
   },
   launchNoze: function(player) {
     this.p.toLaunch.push(new Q.Noze(player));
@@ -985,7 +985,7 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchSmack(player, 1800);
         break;
       case 82:
-        genericLauncher.launchTorbJr(player);
+        genericLauncher.launchTorbJr(player, -200);
         break;
       case 83:
         genericLauncher.launchShark(player);
@@ -1021,15 +1021,13 @@ Q.scene("level1",function(stage) {
       case 94: 
         genericLauncher.launchApple(player);
         break;
-      case 94.7:
+      case 95:
         genericLauncher.launchPig(player);
-        break;
-      case 95.2:
         genericLauncher.launchShark(player);
         break;
       case 96:
         genericLauncher.launchMorbel(player, 0);
-        genericLauncher.launchTorbJr(player);
+        genericLauncher.launchTorbJr(player, -300);
         break;
       case 97.5:
         genericLauncher.launchApj(player);
