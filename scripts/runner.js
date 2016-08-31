@@ -1001,6 +1001,12 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchJumpingMan(player, 350);
         genericLauncher.launchJumpingMan(player, 650);
         break;
+      case 90:
+        genericLauncher.launchShark(player);
+        break;
+      case 90.5:
+        genericLauncher.launchShark(player);
+        break;
       case 91:
         platformThrower.launch(350, [1,1,1,1,1,1,1], [0,0,0,0,0,0,0], 0);
         platformThrower.launch(1200, [1,1,1,1,1,1,1,1,1,1,1,1], [0,0,0,0,0,0,0,0,0,0,0,0], 665);
