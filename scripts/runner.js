@@ -276,7 +276,7 @@ Q.Sprite.extend("Bubbles", {
     this._super({
       x: player.p.x + Q.width + 50,
       y: 565,
-      scale: 2.0,
+      scale: 3.0,
       type: SPRITE_BOX,
       sheet: "bubbles",
       sprite: "bubbles",
