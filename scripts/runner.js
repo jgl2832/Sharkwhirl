@@ -843,9 +843,9 @@ Q.scene("level1",function(stage) {
       player.p.speed = playerStartSpeed * 1.25;
     } else if ( currTime >= 63 && currTime < 66.6 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
-    } else if ( currTime >= 66.6 && currTime < 98 ) {
+    } else if ( currTime >= 66.6 && currTime < 98.5 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5 * 1.1;
-    } else if ( currTime >= 98 ) {
+    } else if ( currTime >= 98.5 ) {
       player.p.speed = 0;
     }
 
@@ -1033,7 +1033,7 @@ Q.scene("level1",function(stage) {
       case 97.5:
         genericLauncher.launchApj(player);
         break;
-      case 98:
+      case 98.5:
         Q.state.set("canPause", false);
         // Stop movement (above)
         Q.state.set("strobe", 0);
