@@ -419,7 +419,7 @@ Q.Sprite.extend("BassDude", {
     this._super({
       x: player.p.x + Q.width + 50,
       y: 565,
-      scale: 2.0,
+      scale: 2.5,
       type: SPRITE_BOX,
       sheet: "bassdude",
       sprite: "bassdude",
