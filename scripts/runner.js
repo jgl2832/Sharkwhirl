@@ -64,7 +64,7 @@ Q.Sprite.extend("Player",{
     });
 
     this.p.points = this.p.standingPoints;
-    this.on("bump.left", this, "bumpAction");
+    this.on("bump.left", this, "stomp");
     this.on("bump.right", this, "bumpAction");
     this.on("bump.top", this, "bumpAction");
     this.on("bump.bottom", this, "stomp");
@@ -278,6 +278,7 @@ Q.Sprite.extend("Bubbles", {
       y: 565,
       scale: 3.0,
       type: SPRITE_BOX,
+      points: [ [-20,-20], [-32, 32], [32, 32], [32, -32] ],
       sheet: "bubbles",
       sprite: "bubbles",
       vx: -250,
