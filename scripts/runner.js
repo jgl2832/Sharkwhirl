@@ -836,9 +836,9 @@ Q.scene("level1",function(stage) {
       player.p.speed = playerStartSpeed;
     } else if ( currTime >= 25 && currTime < 45 ) {
       player.p.speed = playerStartSpeed * 1.25;
-    } else if ( currTime >= 45 && currTime < 55 ) {
+    } else if ( currTime >= 45 && currTime < 55.5 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
-    } else if ( currTime >= 55 && currTime < 63 ) {
+    } else if ( currTime >= 55.5 && currTime < 63 ) {
       player.p.speed = playerStartSpeed * 1.25;
     } else if ( currTime >= 63 && currTime < 66.6 ) {
       player.p.speed = playerStartSpeed * 1.25 * 1.5;
@@ -923,7 +923,7 @@ Q.scene("level1",function(stage) {
       case 54.2:
         genericLauncher.launchPig(player);
         break;
-      case 55: // slow down
+      case 55.5: // slow down
         break;
       case 63.8: // invert, speedup, shuriken
         background.invert();
