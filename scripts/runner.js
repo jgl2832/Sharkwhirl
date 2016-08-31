@@ -912,15 +912,18 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchMurderSg(player, 0);
         break;
       case 52:
-        Q.state.set("throwPigs", true);
-        Q.state.set("throwSharks", true);
+        genericLauncher.launchShark(player);
         break;
       case 53:
         genericLauncher.launchBassDude(player);
         break;
+      case 53.5:
+        genericLauncher.launchShark(player);
+        break;
+      case 54.2:
+        genericLauncher.launchPig(player);
+        break;
       case 55: // slow down
-        Q.state.set("throwPigs", false);
-        Q.state.set("throwSharks", false);
         break;
       case 63.8: // invert, speedup, shuriken
         background.invert();
