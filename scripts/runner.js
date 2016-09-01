@@ -59,6 +59,7 @@ Q.Sprite.extend("Player",{
       gravity: 2,
       standingPoints: [ [-10,-16], [-10, 16], [4, 16], [4, -16] ],
       duckingPoints: [ [-10, -6], [-10, 16], [4, 16], [4, -6] ],
+      collisionMask: Q.SPRITE_DEFAULT,
       speed: 300,
       jump: -1200
     });
@@ -168,6 +169,25 @@ Q.Sprite.extend("Pig",{
   },
   
 
+});
+
+Q.Sprite.extend("FallingCone", {
+  init: function() {
+    this._super({
+      x: Math.random() * Q.width,
+      y: 0,
+      scale: 1.0,
+      sheet: "conebomb",
+      sprite: "conebomb",
+      vx: -5,
+      collisionMask: Q.SPRITE_NONE
+    });
+    this.add("2d, animation");
+  },
+  step: function(dt) {
+    this.p.x += this.p.vx * dt;
+    if(this.p.y > 800) { this.destroy(); }
+  },
 });
 
 Q.Sprite.extend("ConeBomb", {
@@ -533,6 +553,19 @@ Q.Sprite.extend("Shark",{
 
 });
 
+Q.GameObject.extend("ConeFaller", {
+  init: function() {
+    this.p = {}
+  },
+  update: function(dt) {
+    if (Q.state.get("conesFalling")) {
+      if (Math.random() > .75) {
+        this.stage.insert(new Q.FallingCone());
+      }
+    }
+  }
+});
+
 Q.GameObject.extend("GenericLauncher", {
   init: function() {
     this.p = {
@@ -544,6 +577,9 @@ Q.GameObject.extend("GenericLauncher", {
       var thingToLaunch = this.p.toLaunch.shift();
       this.stage.insert(thingToLaunch);
     }
+  },
+  launchFallingCone: function() {
+    this.p.toLaunch.push(new Q.FallingCone());
   },
   launchScribblemn: function(player) {
     this.p.toLaunch.push(new Q.Scribblemn(player));
@@ -1088,11 +1124,15 @@ Q.scene("level1",function(stage) {
 
 Q.scene('hud',function(stage) {
   Q.state.set("start_time", Date.now());
-  
+  Q.state.set("conesFalling", false);
+
   var container = stage.insert(new Q.UI.Container({x: 50, y: 0 }));
 
   var label = container.insert(new Q.Timer());
- 
+
+  var coneFaller = new Q.ConeFaller();
+  stage.insert(coneFaller);
+
   var logo = new Q.Logo();
   logo.hide();
   stage.insert(logo);
@@ -1108,6 +1148,8 @@ Q.scene('hud',function(stage) {
   var cones = new Q.Cones();
   cones.hide();
   stage.insert(cones);
+
+  var genericLauncher = stage.insert(new Q.GenericLauncher());
 
   // HUD loop
   Q.state.on("change.time",function() {
@@ -1144,6 +1186,9 @@ Q.scene('hud',function(stage) {
       case 19:
         // hide cones instructions
         cones.hide();
+        break;
+      case 98.5:
+        Q.state.set("conesFalling", true);
         break;
     }
   });
