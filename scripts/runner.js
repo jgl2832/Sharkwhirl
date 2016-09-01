@@ -817,6 +817,22 @@ Q.Sprite.extend("Cones", {
     });
   }
 });
+Q.Sprite.extend("Win", {
+  init: function(p) {
+    this._super(p, {
+      x: Q.width/2,
+      y: 0,
+      vy: 2,
+      type: Q.SPRITE_NONE, 
+      asset: "win.png"
+    });
+  },
+  update: function(dt) {
+    if (Q.state.get("winFall") && this.p.y < (Q.height/2 - 50) ) {
+      this.p.y = this.p.y + this.p.vy;
+    }
+  }
+});
 
 Q.UI.Text.extend("Timer",{
   init: function(p) {
@@ -1125,6 +1141,7 @@ Q.scene("level1",function(stage) {
 Q.scene('hud',function(stage) {
   Q.state.set("start_time", Date.now());
   Q.state.set("conesFalling", false);
+  Q.state.set("winFall", false);
 
   var container = stage.insert(new Q.UI.Container({x: 50, y: 0 }));
 
@@ -1148,6 +1165,10 @@ Q.scene('hud',function(stage) {
   var cones = new Q.Cones();
   cones.hide();
   stage.insert(cones);
+
+  var win = new Q.Win();
+  win.hide();
+  stage.insert(win);
 
   var genericLauncher = stage.insert(new Q.GenericLauncher());
 
@@ -1189,6 +1210,8 @@ Q.scene('hud',function(stage) {
         break;
       case 98.5:
         Q.state.set("conesFalling", true);
+        win.show();
+        Q.state.set("winFall", true);
         break;
     }
   });
@@ -1206,7 +1229,7 @@ var stageGame = function() {
 };
   
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
-       " pig.json, shark.png, shark.json, street.png," +
+       " pig.json, shark.png, shark.json, street.png, win.png," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json, owl.png, owl.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
        " apple.png, apple.json, bubbles.png, bubbles.json, morbel.png, morbel.json, jumpingman.png, jumpingman.json," +
