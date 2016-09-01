@@ -1043,6 +1043,7 @@ Q.scene("level1",function(stage) {
         Q.audio.stop();
         // Cones 'raining from sky'
         // 'Download the song' link
+        var linkDiv = document.getElementById("downloadLink").style.display="";
         // You won! banner on top
 
 
