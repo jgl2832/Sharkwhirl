@@ -1102,8 +1102,10 @@ Q.scene("level1",function(stage) {
         genericLauncher.launchShark(player);
         break;
       case 96:
-        genericLauncher.launchMorbel(player, 0);
         genericLauncher.launchTorbJr(player, -300);
+        break;
+      case 96.7:
+        genericLauncher.launchMorbel(player, 0);
         break;
       case 97.5:
         genericLauncher.launchApj(player);
