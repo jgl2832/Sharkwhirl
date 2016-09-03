@@ -175,17 +175,22 @@ Q.Sprite.extend("FallingCone", {
   init: function() {
     this._super({
       x: Math.random() * Q.width,
-      y: 0,
-      scale: 1.0,
-      sheet: "conebomb",
-      sprite: "conebomb",
-      vx: -5,
+      y: (Math.random() * -200) - 25,
+      scale: 0.20 + Math.random() * 0.05,
+      sheet: "coneup",
+      sprite: "coneup",
+      vx: (Math.random() * 50) - 25,
+      gravity: .4,
+      angle: Math.random() * 360,
+      spin: (Math.random() * 5) - 2.5,
       collisionMask: Q.SPRITE_NONE
     });
     this.add("2d, animation");
+    this.play("cone");
   },
   step: function(dt) {
     this.p.x += this.p.vx * dt;
+    this.p.angle = this.p.angle + this.p.spin;
     if(this.p.y > 800) { this.destroy(); }
   },
 });
@@ -1231,7 +1236,7 @@ var stageGame = function() {
 };
   
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
-       " pig.json, shark.png, shark.json, street.png, win.png," +
+       " pig.json, shark.png, shark.json, street.png, win.png, coneup.png, coneup.json," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json, owl.png, owl.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
        " apple.png, apple.json, bubbles.png, bubbles.json, morbel.png, morbel.json, jumpingman.png, jumpingman.json," +
@@ -1257,6 +1262,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("apj.png", "apj.json");
     Q.compileSheets("owl.png", "owl.json");
     Q.compileSheets("bg.png", "bg.json");
+    Q.compileSheets("coneup.png", "coneup.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -1319,6 +1325,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("bg", {
       reg: { frames: [1], rate: 1, loop: true }
+    });
+    Q.animations("coneup", {
+      cone: { frames: [0,1,2,3,4,5,6,7,8,9], rate: 1/4, loop: false }
     });
     stageGame();
   
