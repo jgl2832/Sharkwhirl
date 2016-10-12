@@ -61,7 +61,7 @@ Q.Sprite.extend("Player",{
       duckingPoints: [ [-10, -6], [-10, 16], [4, 16], [4, -6] ],
       collisionMask: Q.SPRITE_DEFAULT,
       speed: 300,
-      jump: -1200
+      jump: -1200,
     });
 
     this.p.points = this.p.standingPoints;
@@ -75,8 +75,15 @@ Q.Sprite.extend("Player",{
   },
 
   bumpAction: function(coll) {
-    if(isEnemy(coll.obj)) {
-      this.die(coll);
+    if (Q.state.get("invincible")) {
+      if (isEnemy(coll.obj)) {
+        this.stage.insert(new Q.Explosion(coll.obj.p.x, coll.obj.p.y));
+        coll.obj.destroy();
+      }
+    } else {
+      if (isEnemy(coll.obj)) {
+        this.die(coll);
+      }
     }
   },
 
@@ -100,7 +107,6 @@ Q.Sprite.extend("Player",{
 
   step: function(dt) {
     this.p.vx += (this.p.speed - this.p.vx)/4;
-
 
     if(this.p.y > 555) {
       this.p.y = 555;
@@ -193,6 +199,28 @@ Q.Sprite.extend("FallingCone", {
     this.p.angle = this.p.angle + this.p.spin;
     if(this.p.y > 800) { this.destroy(); }
   },
+});
+
+Q.Sprite.extend("Explosion", {
+  init: function(xStart, yStart) {
+    this._super({
+      x: xStart,
+      y: yStart,
+      scale: 1.0,
+      type: Q.SPRITE_NONE,
+      sheet: "explosion",
+      sprite: "explosion",
+      exploded: 0
+    });
+    this.add("animation");
+  },
+
+  step: function(dt) {
+    if (this.p.exploded == 0) {
+      this.play("explode");
+      this.p.exploded = 1;
+    }
+  }
 });
 
 Q.Sprite.extend("ConeBomb", {
@@ -875,6 +903,9 @@ Q.scene("level1",function(stage) {
   Q.state.set("strobe", 0);
   Q.state.set("canPause", true);
   Q.state.set("frame", 0);
+  if ( getParameterByName("invincible") === "true" ) {
+    Q.state.set("invincible", true);
+  }
 
   var background = new Q.BackgroundWall();
   stage.insert(background);
@@ -1236,7 +1267,7 @@ var stageGame = function() {
 };
   
 Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
-       " pig.json, shark.png, shark.json, street.png, win.png, coneup.png, coneup.json," +
+       " pig.json, shark.png, shark.json, street.png, win.png, coneup.png, coneup.json, explosion.png, explosion.json," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json, owl.png, owl.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
        " apple.png, apple.json, bubbles.png, bubbles.json, morbel.png, morbel.json, jumpingman.png, jumpingman.json," +
@@ -1263,6 +1294,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.compileSheets("owl.png", "owl.json");
     Q.compileSheets("bg.png", "bg.json");
     Q.compileSheets("coneup.png", "coneup.json");
+    Q.compileSheets("explosion.png", "explosion.json");
 
     Q.animations("dude", {
       walk_right: {frames: [0,1,2,3,4,5,6,7], rate: 1/13, loop: true},
@@ -1328,6 +1360,9 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     });
     Q.animations("coneup", {
       cone: { frames: [0,1,2,3,4,5,6,7,8,9], rate: 1/4, loop: false }
+    });
+    Q.animations("explosion", {
+      explode: { frames: [0,1,2,3,4], rate: 1/4, loop: false }
     });
     stageGame();
   
