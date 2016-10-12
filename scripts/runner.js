@@ -57,11 +57,12 @@ Q.Sprite.extend("Player",{
       x: -700,
       y: 400,
       gravity: 2,
-      standingPoints: [ [-10,-16], [-10, 16], [4, 16], [4, -16] ],
+      standingPoints: [ [-10,-14], [-10, 16], [4, 16], [4, -14] ],
       duckingPoints: [ [-10, -6], [-10, 16], [4, 16], [4, -6] ],
       collisionMask: Q.SPRITE_DEFAULT,
       speed: 300,
       jump: -1200,
+      skipCollide: Q.state.get("invincible"),
     });
 
     this.p.points = this.p.standingPoints;
@@ -70,10 +71,18 @@ Q.Sprite.extend("Player",{
     this.on("bump.top", this, "bumpAction");
     this.on("bump.bottom", this, "stomp");
 
+    console.log(this);
     this.add("2d, animation");
     this.play("stand_right");
+    this.on("hit", this, "newCollision");
   },
-
+  newCollision: function(coll, last) {
+    if (isEnemy(coll.obj)) {
+      this.p.skipCollide = Q.state.get("invincible");
+    } else {
+      this.p.skipCollide = false;
+    }
+  },
   bumpAction: function(coll) {
     if (Q.state.get("invincible")) {
       if (isEnemy(coll.obj)) {
