@@ -101,7 +101,9 @@ Q.Sprite.extend("Player",{
     } else if (isPlatform(coll.obj)) {
       this.p.landed = 1;
     } else {
-      this.die(coll);
+      if (!Q.state.get("invincible") {
+        this.die(coll);
+      }
     }
   },
 
