@@ -17,8 +17,17 @@ window.addEventListener("load",function() {
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
         .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup("myGame", { width: 800, height: 600, scaleToFit: true })
-        .controls().touch()
         .enableSound();
+
+Q.input.keyboardControls();
+
+Q.input.touchControls({
+  controls:  [ ['up','u' ],
+             [],
+             [],
+             [],
+             ['down', 'd' ]]
+});
 
 if ( getParameterByName("debug") === "true" ) {
   Q.debug = true;
