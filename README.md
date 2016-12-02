@@ -8,14 +8,8 @@ http://www.html5quintus.com/
 Check it out here:
 https://jgl2832.github.io/Sharkwhirl/
 
-# TODO
-- simple http server using 'python -m SimpleHTTPServer' running as a daemon for local development purposes
-- can this be a module on another page somehow
-- undo github pages nonsense for now, just focus on local dev
-- dockerize? maybe a bit much
-- game script
-- loading screen while music and assets are loading?
-- find assets for derek
-
 Created by Jake Levine
+
 Music by Tiny Hazard
+
+Assets by Tiny Hazard & Others
