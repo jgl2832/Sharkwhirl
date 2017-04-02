@@ -8,7 +8,7 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-window.addEventListener("load",function() {
+window.addEventListener("click",function() {
 
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
         .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
@@ -1277,7 +1277,6 @@ Q.scene('hud',function(stage) {
 
 var stageGame = function() {
     Q.audio.stop();
-    Q.enableSound();
     Q.clearStages();
     Q.state.set("paused", false);
     Q.audio.play('sharkwhirl-new.mp3');
