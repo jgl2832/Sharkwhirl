@@ -13,7 +13,7 @@ window.addEventListener("load",function() {
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
         .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup("myGame", { width: 800, height: 600, scaleToFit: true })
-        .enableSound();
+        .touch();
 
 Q.input.keyboardControls();
 
@@ -105,6 +105,7 @@ Q.Sprite.extend("Player",{
     this.play("explode");
     Q.stage().pause();
     Q.audio.stop();
+    Q.state.set("canPause", false);
     setTimeout(stageGame, 1000);
   },
 
@@ -911,6 +912,29 @@ Q.UI.Text.extend("Timer",{
   }
 });
 
+Q.scene("level0", function(stage) {
+  var background = new Q.BackgroundWall();
+  stage.insert(new Q.BackgroundFloor());
+  stage.insert(background);
+  var logo = new Q.Logo();
+  stage.insert(logo);
+
+  var button = new Q.UI.Button({
+      label: "Start",
+      y: 400,
+      x: Q.width/2,
+      fill: "#990000",
+      border: 5,
+      shadow: 10,
+      shadowColor: "rgba(0,0,0,0.5)",
+    }, function() {
+      stageGame();
+    });
+  stage.insert(button);
+  stage.add("viewport");
+  stage.viewport.centerOn(button.p.x, button.p.y);
+});
+
 Q.scene("level1",function(stage) {
   Q.state.set("throwSharks", false);
   Q.state.set("throwPigs", false);
@@ -1275,16 +1299,23 @@ Q.scene('hud',function(stage) {
   container.fit(20);
 });
 
+var stageStart = function() {
+  Q.clearStages();
+  Q.stageScene("level0");
+}
 var stageGame = function() {
-    Q.audio.stop();
+  Q.enableSound();
+  Q.audio.stop();
+  Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
     Q.clearStages();
     Q.state.set("paused", false);
     Q.audio.play('sharkwhirl-new.mp3');
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
+  });
 };
-  
-Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-new.ogg, dude.json, dude.png, pig.png," +
+
+Q.load("logo.png, jump.png, duck.png, cones.png, dude.json, dude.png, pig.png," +
        " pig.json, shark.png, shark.json, street.png, win.png, coneup.png, coneup.json, explosion.png, explosion.json," +
        " platform.png, platform.json, conebomb.png, conebomb.json, scribblemn.png, scribblemn.json, owl.png, owl.json," +
        " susman.png, susman.json, shuriken.png, shuriken.json, murdersg.png, murdersg.json, bassdude.png, bassdude.json," +
@@ -1382,7 +1413,7 @@ Q.load("logo.png, jump.png, duck.png, cones.png, sharkwhirl-new.mp3, sharkwhirl-
     Q.animations("explosion", {
       explode: { frames: [0,1,2,3,4], rate: 1/4, loop: false }
     });
-    stageGame();
+    stageStart();
   
 });
 
