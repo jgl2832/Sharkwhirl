@@ -105,6 +105,8 @@ Q.Sprite.extend("Player",{
     this.play("explode");
     Q.stage().pause();
     Q.audio.stop();
+    document.getElementById('song').pause();
+    document.getElementById('song').currentTime = 0;
     Q.state.set("canPause", false);
     setTimeout(stageGame, 1000);
   },
@@ -935,12 +937,8 @@ Q.scene("level0", function(stage) {
    
   var stageFn = function(e) {
     window.removeEventListener(e.type, arguments.callee);
-
-    Q.enableSound();
-    Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
-      Q.audio.play('sharkwhirl-new.mp3');
-      stageGame();
-    });
+    document.getElementById('song').play();
+    stageGame();
   };
   window.addEventListener("click", stageFn);
   window.addEventListener("ontouchstart", stageFn);
@@ -1315,15 +1313,18 @@ var stageStart = function() {
   Q.stageScene("level0");
 }
 var stageGame = function() {
-  //Q.enableSound();
+  Q.enableSound();
   Q.audio.stop();
-  //Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
+  document.getElementById('song').pause();
+  document.getElementById('song').currentTime = 0;
+  Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
     Q.clearStages();
     Q.state.set("paused", false);
     Q.audio.play('sharkwhirl-new.mp3');
+    document.getElementById('song').play();
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
-  //});
+  });
 };
 
 Q.load("logo.png, jump.png, duck.png, cones.png, dude.json, dude.png, pig.png," +
@@ -1433,6 +1434,8 @@ document.addEventListener("blur", function() {
     Q.state.set("paused",true);
     Q.stage().pause();
     Q.audio.stop();
+    document.getElementById('song').pause();
+    document.getElementById('song').currentTime = 0;
   }
 }, true);
 
