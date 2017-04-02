@@ -924,9 +924,9 @@ Q.scene("level0", function(stage) {
   var stageFn = function(e) {
     console.log(e.type);
     window.removeEventListener(e.type, arguments.callee);
-    if (isiOS) {
+    //if (isiOS) {
       document.getElementById('song').play();
-    }
+    //}
     stageGame();
   };
 
