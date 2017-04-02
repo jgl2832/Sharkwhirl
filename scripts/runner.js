@@ -8,6 +8,8 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
+var isiOS = navigator.userAgent.match(/iPad|iPod|iPhone/i) != null;
+
 window.addEventListener("load",function() {
 
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
@@ -104,9 +106,7 @@ Q.Sprite.extend("Player",{
   die: function(coll) {
     this.play("explode");
     Q.stage().pause();
-    Q.audio.stop();
-    document.getElementById('song').pause();
-    document.getElementById('song').currentTime = 0;
+    audioStop();
     Q.state.set("canPause", false);
     setTimeout(stageGame, 1000);
   },
@@ -924,7 +924,9 @@ Q.scene("level0", function(stage) {
   var stageFn = function(e) {
     console.log(e.type);
     window.removeEventListener(e.type, arguments.callee);
-    document.getElementById('song').play();
+    if (isiOS) {
+      document.getElementById('song').play();
+    }
     stageGame();
   };
 
@@ -1207,7 +1209,7 @@ Q.scene("level1",function(stage) {
         // Stop character animation
         Q.state.set("moving", false);
         // Sound stopped
-        Q.audio.stop();
+        audioStop();
         // Cones 'raining from sky'
         // 'Download the song' link
         if (!Q.state.get("invincible")) {
@@ -1316,14 +1318,11 @@ var stageStart = function() {
 }
 var stageGame = function() {
   Q.enableSound();
-  Q.audio.stop();
-  document.getElementById('song').pause();
-  document.getElementById('song').currentTime = 0;
+  audioStop();
   Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
     Q.clearStages();
     Q.state.set("paused", false);
-    Q.audio.play('sharkwhirl-new.mp3');
-    document.getElementById('song').play();
+    audioPlay();
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
   });
@@ -1435,9 +1434,7 @@ document.addEventListener("blur", function() {
   if ( Q.state.get("canPause") ) {
     Q.state.set("paused",true);
     Q.stage().pause();
-    Q.audio.stop();
-    document.getElementById('song').pause();
-    document.getElementById('song').currentTime = 0;
+    audioStop();
   }
 }, true);
 
@@ -1447,5 +1444,21 @@ document.addEventListener("focus", function() {
   }
 }, true);
 
+var audioStop = function() {
+  if (isiOS) {
+    document.getElementById('song').pause();
+    document.getElementById('song').currentTime = 0;
+  } else {
+    Q.audio.stop();
+  }
+}
+
+var audioPlay = function() {
+  if (isiOS) {
+    document.getElementById('song').play();
+  } else {
+    Q.audio.play('sharkwhirl-new.mp3');
+  }
+}
 
 });
