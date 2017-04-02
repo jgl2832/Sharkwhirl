@@ -8,8 +8,6 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-var isiOS = navigator.userAgent.match(/iPad|iPod|iPhone/i) != null;
-
 window.addEventListener("load",function() {
 
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
@@ -924,9 +922,7 @@ Q.scene("level0", function(stage) {
   var stageFn = function(e) {
     console.log(e.type);
     window.removeEventListener(e.type, arguments.callee);
-    //if (isiOS) {
-      document.getElementById('song').play();
-    //}
+    document.getElementById('song').play();
     stageGame();
   };
 
@@ -1322,11 +1318,8 @@ var stageGame = function() {
   Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
     Q.clearStages();
     Q.state.set("paused", false);
-    if (isiOS) {
-      document.getElementById('song').play();
-    } else {
-      Q.audio.play('sharkwhirl-new.mp3');
-    }
+    document.getElementById('song').play();
+    //Q.audio.play('sharkwhirl-new.mp3');
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
   });
