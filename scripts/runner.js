@@ -912,6 +912,14 @@ Q.UI.Text.extend("Timer",{
   }
 });
 
+var stageFn = function(e) {
+  console.log(e.type);
+  document.removeEventListener(e.type, arguments.callee);
+  document.getElementById('song').play();
+  document.getElementById('song').pause();
+  stageGame();
+};
+
 Q.scene("level0", function(stage) {
   var background = new Q.BackgroundWall();
   stage.insert(new Q.BackgroundFloor());
@@ -919,12 +927,6 @@ Q.scene("level0", function(stage) {
   var logo = new Q.Logo();
   stage.insert(logo);
   
-  var stageFn = function(e) {
-    console.log(e.type);
-    document.removeEventListener(e.type, arguments.callee);
-    document.getElementById('song').play();
-    stageGame();
-  };
 
   var button = new Q.UI.Button({
       label: "Start",
