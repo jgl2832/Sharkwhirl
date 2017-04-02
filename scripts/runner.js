@@ -935,7 +935,12 @@ Q.scene("level0", function(stage) {
    
   var stageFn = function(e) {
     window.removeEventListener(e.type, arguments.callee);
-    stageGame();
+
+    Q.enableSound();
+    Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
+      Q.audio.play('sharkwhirl-new.mp3');
+      stageGame();
+    });
   };
   window.addEventListener("click", stageFn);
   window.addEventListener("touchstart", stageFn);
@@ -1310,15 +1315,15 @@ var stageStart = function() {
   Q.stageScene("level0");
 }
 var stageGame = function() {
-  Q.enableSound();
+  //Q.enableSound();
   Q.audio.stop();
-  Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
+  //Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
     Q.clearStages();
     Q.state.set("paused", false);
     Q.audio.play('sharkwhirl-new.mp3');
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
-  });
+  //});
 };
 
 Q.load("logo.png, jump.png, duck.png, cones.png, dude.json, dude.png, pig.png," +
