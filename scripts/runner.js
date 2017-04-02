@@ -63,7 +63,7 @@ Q.Sprite.extend("Player",{
       y: 400,
       gravity: 2,
       standingPoints: [ [-10,-14], [-10, 16], [4, 16], [4, -14] ],
-      duckingPoints: [ [-10, -6], [-10, 16], [4, 16], [4, -6] ],
+      duckingPoints: [ [-10, -4], [-10, 16], [4, 16], [4, -4] ],
       collisionMask: Q.SPRITE_DEFAULT,
       speed: 300,
       jump: -1200,
