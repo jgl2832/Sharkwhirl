@@ -10,10 +10,6 @@ function getParameterByName(name, url) {
 
 window.addEventListener("load",function() {
 
-// TODO
-// better collision detection with the sharks
-// training walls
-
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
         .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup("myGame", { width: 800, height: 600, scaleToFit: true })
@@ -1281,6 +1277,7 @@ Q.scene('hud',function(stage) {
 
 var stageGame = function() {
     Q.audio.stop();
+    Q.enableSound();
     Q.clearStages();
     Q.state.set("paused", false);
     Q.audio.play('sharkwhirl-new.mp3');
