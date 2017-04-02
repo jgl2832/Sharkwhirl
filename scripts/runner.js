@@ -927,16 +927,18 @@ Q.scene("level0", function(stage) {
       border: 5,
       shadow: 10,
       shadowColor: "rgba(0,0,0,0.5)",
-    })
-  button.on("touchStart", function() {
-      stageGame();
-  });
-  button.on("click", function() {
-      stageGame();
-  });
+    });
+
   stage.insert(button);
   stage.add("viewport");
   stage.viewport.centerOn(button.p.x, button.p.y);
+   
+  var stageFn = function(e) {
+    window.removeEventListener(e.type, arguments.callee);
+    stageGame();
+  };
+  window.addEventListener("click", stageFn);
+  window.addEventListener("touchStart", stageFn);
 });
 
 Q.scene("level1",function(stage) {
