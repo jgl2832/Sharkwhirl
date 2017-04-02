@@ -921,7 +921,7 @@ Q.scene("level0", function(stage) {
   
   var stageFn = function(e) {
     console.log(e.type);
-    window.removeEventListener(e.type, arguments.callee);
+    document.removeEventListener(e.type, arguments.callee);
     document.getElementById('song').play();
     stageGame();
   };
@@ -940,8 +940,8 @@ Q.scene("level0", function(stage) {
   stage.add("viewport");
   stage.viewport.centerOn(button.p.x, button.p.y);
    
-  window.addEventListener("click", stageFn);
-  window.addEventListener("touchstart", stageFn);
+  document.addEventListener("click", stageFn);
+  document.addEventListener("touchstart", stageFn);
 });
 
 Q.scene("level1",function(stage) {
