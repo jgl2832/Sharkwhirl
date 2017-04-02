@@ -10,7 +10,7 @@ function getParameterByName(name, url) {
 
 window.addEventListener("load",function() {
 
-var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
+var Q = window.Q = Quintus()
         .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup("myGame", { width: 800, height: 600, scaleToFit: true })
         .touch();
@@ -913,11 +913,15 @@ Q.UI.Text.extend("Timer",{
 });
 
 var stageFn = function(e) {
+  document.removeEventListener(e.type, stageFn, true);
+  var song = document.getElementById('song');
   console.log(e.type);
-  document.removeEventListener(e.type, arguments.callee);
-  document.getElementById('song').play();
-  document.getElementById('song').pause();
-  stageGame();
+  song.play();
+  audioStop();
+  song.addEventListener("canplaythrough", function() {
+    song.removeEventListener("canplaythrough", arguments.callee);
+    stageGame();
+  }, false);
 };
 
 Q.scene("level0", function(stage) {
@@ -942,8 +946,8 @@ Q.scene("level0", function(stage) {
   stage.add("viewport");
   stage.viewport.centerOn(button.p.x, button.p.y);
    
-  document.addEventListener("click", stageFn);
-  document.addEventListener("touchstart", stageFn);
+  document.addEventListener("click", stageFn, true);
+  document.addEventListener("touchstart", stageFn, true);
 });
 
 Q.scene("level1",function(stage) {
