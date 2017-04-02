@@ -11,7 +11,7 @@ function getParameterByName(name, url) {
 window.addEventListener("load",function() {
 
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
-        .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
+        .include("Sprites, Scenes, Input, 2D, Anim, Touch, UI")
         .setup("myGame", { width: 800, height: 600, scaleToFit: true })
         .touch();
 
@@ -1315,14 +1315,11 @@ var stageStart = function() {
 var stageGame = function() {
   Q.enableSound();
   audioStop();
-  //Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
     Q.clearStages();
     Q.state.set("paused", false);
     document.getElementById('song').play();
-    //Q.audio.play('sharkwhirl-new.mp3');
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
-  //});
 };
 
 Q.load("logo.png, jump.png, duck.png, cones.png, dude.json, dude.png, pig.png," +
@@ -1444,7 +1441,6 @@ document.addEventListener("focus", function() {
 var audioStop = function() {
     document.getElementById('song').pause();
     document.getElementById('song').currentTime = 0;
-    Q.audio.stop();
 }
 
 });
