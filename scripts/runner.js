@@ -1322,7 +1322,11 @@ var stageGame = function() {
   Q.load("sharkwhirl-new.mp3, sharkwhirl-new.ogg", function() {
     Q.clearStages();
     Q.state.set("paused", false);
-    audioPlay();
+    if (isiOS) {
+      document.getElementById('song').play();
+    } else {
+      Q.audio.play('sharkwhirl-new.mp3');
+    }
     Q.stageScene("level1");
     Q.stageScene("hud", 3, Q('Player').first().p);
   });
@@ -1445,20 +1449,9 @@ document.addEventListener("focus", function() {
 }, true);
 
 var audioStop = function() {
-  if (isiOS) {
     document.getElementById('song').pause();
     document.getElementById('song').currentTime = 0;
-  } else {
     Q.audio.stop();
-  }
-}
-
-var audioPlay = function() {
-  if (isiOS) {
-    document.getElementById('song').play();
-  } else {
-    Q.audio.play('sharkwhirl-new.mp3');
-  }
 }
 
 });
