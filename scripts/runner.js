@@ -938,7 +938,7 @@ Q.scene("level0", function(stage) {
     stageGame();
   };
   window.addEventListener("click", stageFn);
-  window.addEventListener("touchStart", stageFn);
+  window.addEventListener("touchstart", stageFn);
 });
 
 Q.scene("level1",function(stage) {
