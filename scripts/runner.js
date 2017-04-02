@@ -920,6 +920,13 @@ Q.scene("level0", function(stage) {
   stage.insert(background);
   var logo = new Q.Logo();
   stage.insert(logo);
+  
+  var stageFn = function(e) {
+    console.log(e.type);
+    window.removeEventListener(e.type, arguments.callee);
+    document.getElementById('song').play();
+    stageGame();
+  };
 
   var button = new Q.UI.Button({
       label: "Start",
@@ -935,13 +942,8 @@ Q.scene("level0", function(stage) {
   stage.add("viewport");
   stage.viewport.centerOn(button.p.x, button.p.y);
    
-  var stageFn = function(e) {
-    window.removeEventListener(e.type, arguments.callee);
-    document.getElementById('song').play();
-    stageGame();
-  };
   window.addEventListener("click", stageFn);
-  window.addEventListener("ontouchstart", stageFn);
+  window.addEventListener("touchstart", stageFn);
 });
 
 Q.scene("level1",function(stage) {
