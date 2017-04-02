@@ -927,9 +927,13 @@ Q.scene("level0", function(stage) {
       border: 5,
       shadow: 10,
       shadowColor: "rgba(0,0,0,0.5)",
-    }, function() {
+    })
+  button.on("touchStart", function() {
       stageGame();
-    });
+  });
+  button.on("click", function() {
+      stageGame();
+  });
   stage.insert(button);
   stage.add("viewport");
   stage.viewport.centerOn(button.p.x, button.p.y);
