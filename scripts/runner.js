@@ -943,7 +943,7 @@ Q.scene("level0", function(stage) {
     });
   };
   window.addEventListener("click", stageFn);
-  window.addEventListener("touchstart", stageFn);
+  window.addEventListener("touchend", stageFn);
 });
 
 Q.scene("level1",function(stage) {
