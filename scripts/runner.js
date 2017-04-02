@@ -1313,7 +1313,6 @@ var stageStart = function() {
   Q.stageScene("level0");
 }
 var stageGame = function() {
-  Q.enableSound();
   audioStop();
     Q.clearStages();
     Q.state.set("paused", false);
