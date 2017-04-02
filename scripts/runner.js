@@ -8,7 +8,7 @@ function getParameterByName(name, url) {
   return decodeURIComponent(results[2].replace(/\+/g, " "));
 }
 
-window.addEventListener("touchend",function() {
+window.addEventListener("load",function() {
 
 var Q = window.Q = Quintus({ audioSupported: ['mp3','ogg']})
         .include("Audio, Sprites, Scenes, Input, 2D, Anim, Touch, UI")
