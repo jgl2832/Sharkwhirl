@@ -913,6 +913,7 @@ Q.UI.Text.extend("Timer",{
 });
 
 var stageFn = function(e) {
+  Q("UI.Button").first().p.label = "Loading..."
   document.removeEventListener(e.type, stageFn, true);
   var song = document.getElementById('song');
   console.log(e.type);
@@ -933,7 +934,7 @@ Q.scene("level0", function(stage) {
   
 
   var button = new Q.UI.Button({
-      label: "Start",
+      label: "     Start     ",
       y: 400,
       x: Q.width/2,
       fill: "#990000",
