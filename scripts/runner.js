@@ -913,16 +913,19 @@ Q.UI.Text.extend("Timer",{
 });
 
 var once = true;
-var stageFn = function(e) {
+var stageFn = function() {
   if (!once) {
     return;
   }
   once = false;
   Q("UI.Button").first().p.label = "Loading..."
-  document.removeEventListener("click", stageFn, true);
-  document.removeEventListener("touchstart", stageFn, true);
+  document.removeEventListener("click", function() {
+    stageFn()
+  }, true);
+  document.removeEventListener("touchstart", function() {
+    stageFn()
+  }, true);
   var song = document.getElementById('song');
-  console.log(e.type);
   song.play();
   audioStop();
   song.addEventListener("canplaythrough", function() {
@@ -953,8 +956,12 @@ Q.scene("level0", function(stage) {
   stage.add("viewport");
   stage.viewport.centerOn(button.p.x, button.p.y);
    
-  document.addEventListener("click", stageFn, true);
-  document.addEventListener("touchstart", stageFn, true);
+  document.addEventListener("click", function() {
+    stageFn();
+  }, true);
+  document.addEventListener("touchstart", function() {
+    stageFn();
+  }, true);
 });
 
 Q.scene("level1",function(stage) {
