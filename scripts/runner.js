@@ -912,9 +912,15 @@ Q.UI.Text.extend("Timer",{
   }
 });
 
+var once = true;
 var stageFn = function(e) {
+  if (!once) {
+    return;
+  }
+  once = false;
   Q("UI.Button").first().p.label = "Loading..."
-  document.removeEventListener(e.type, stageFn, true);
+  document.removeEventListener("click", stageFn, true);
+  document.removeEventListener("touchstart", stageFn, true);
   var song = document.getElementById('song');
   console.log(e.type);
   song.play();
